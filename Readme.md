@@ -1,7 +1,7 @@
 # Личный проект «Кексобукинг» [![Build status][travis-image]][travis-url]
 
 * Студент: [Egor Arkharov](https://up.htmlacademy.ru/javascript/20/user/976243).
-* Наставник: `Неизвестно`.
+* Наставник: [Татьяна Осадчук](https://up.htmlacademy.ru/javascript/20/user/595543).
 
 ---
 
