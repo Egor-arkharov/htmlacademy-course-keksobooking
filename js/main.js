@@ -7,10 +7,14 @@ var CHECKOUTS = ['12:00', '13:00', '14:00'];
 var OFFER_FEATURES = ['wifi', 'dishwasher', 'parking', 'washer', 'elevator', 'conditioner'];
 var OFFER_PHOTOS = ['http://o0.github.io/assets/images/tokyo/hotel1.jpg', 'http://o0.github.io/assets/images/tokyo/hotel2.jpg', 'http://o0.github.io/assets/images/tokyo/hotel3.jpg'];
 var MIN_OFFER_VALUE = 1;
-var MAX_IMG_VALUE = 8;
+var MAX_OFFER_QUANTITY = 8;
 var MAX_PRICE_VALUE = 15000;
 var MAX_ROOMS_VALUE = 5;
 var MAX_GUESTS_VALUE = 6;
+var MIN_LOCATION_X = 50;
+var MAX_LOCATION_X = 500;
+var MIN_LOCATION_Y = 130;
+var MAX_LOCATION_Y = 630;
 
 var map = document.querySelector('.map');
 var pinTemplate = document.querySelector('#pin').content;
@@ -42,11 +46,11 @@ var getOfferArr = function (offerKey) {
 };
 
 var getApartment = function () {
-  var imgAddress = '0' + getRandomNum(MIN_OFFER_VALUE, MAX_IMG_VALUE);
-  var locationX = getRandomNum(50, 500);
-  var locationY = getRandomNum(130, 630);
+  var imgAddress = '0' + getRandomNum(MIN_OFFER_VALUE, MAX_OFFER_QUANTITY);
+  var locationX = getRandomNum(MIN_LOCATION_X, MAX_LOCATION_X);
+  var locationY = getRandomNum(MIN_LOCATION_Y, MAX_LOCATION_Y);
 
-  var ApartmentOverview = {
+  var apartmentOverview = {
     author: {
       avatar: 'img/avatars/user' + imgAddress + '.png'
     },
@@ -69,12 +73,12 @@ var getApartment = function () {
     }
   };
 
-  return ApartmentOverview;
+  return apartmentOverview;
 };
 
 var getApartments = function () {
   var apartmentsArr = [];
-  for (var i = 0; i < 8; i++) {
+  for (var i = 0; i < MAX_OFFER_QUANTITY; i++) {
     apartmentsArr[i] = getApartment(i);
   }
 
@@ -101,7 +105,7 @@ var renderPins = function () {
   var fragment = document.createDocumentFragment();
   var apartments = getApartments();
 
-  for (var i = 0; i < 8; i++) {
+  for (var i = 0; i < MAX_OFFER_QUANTITY; i++) {
     var adPin = renderPin(apartments[i]);
     fragment.appendChild(adPin);
   }
