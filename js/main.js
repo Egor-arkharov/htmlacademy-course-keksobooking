@@ -21,6 +21,8 @@ var pinTemplate = document.querySelector('#pin').content;
 var mapPin = document.querySelector('.map__pin');
 var mapPins = document.querySelector('.map__pins');
 
+var cardTemplate = document.querySelector('#card').content.querySelector('.popup');
+
 var offsetX = (mapPin.getBoundingClientRect().width) / 2;
 var offsetY = mapPin.getBoundingClientRect().height;
 
@@ -114,3 +116,51 @@ var renderPins = function () {
 };
 
 renderPins();
+
+var renderCard = function () {
+  var apartment = getApartment();
+  var apartmentCard = cardTemplate.cloneNode(true);
+  apartmentCard.querySelector('.popup__title').textContent = apartment.offer.title;
+  apartmentCard.querySelector('.popup__text--address').textContent = apartment.offer.address;
+  apartmentCard.querySelector('.popup__text--price').textContent = apartment.offer.price + '₽/ночь';
+
+  var markType = function () {
+    if (apartment.offer.type === 'flat') {
+      apartmentCard.querySelector('.popup__type').textContent = 'Квартира';
+    } else
+    if (apartment.offer.type === 'bungalo') {
+      apartmentCard.querySelector('.popup__type').textContent = 'Бунгало';
+    } else
+    if (apartment.offer.type === 'house') {
+      apartmentCard.querySelector('.popup__type').textContent = 'Дом';
+    } else
+    if (apartment.offer.type === 'palace') {
+      apartmentCard.querySelector('.popup__type').textContent = 'Дворец';
+    }
+    return;
+  };
+  markType();
+
+  apartmentCard.querySelector('.popup__text--capacity').textContent = apartment.offer.rooms + ' комнаты для ' + apartment.offer.guests;
+  apartmentCard.querySelector('.popup__text--time').textContent = 'Заезд после ' + apartment.offer.checkin + ', выезд до ' + apartment.offer.checkout;
+  apartmentCard.querySelector('.popup__features').textContent = apartment.offer.features;
+  apartmentCard.querySelector('.popup__description').textContent = apartment.offer.description;
+
+  var markPhotos = function () {
+    var photosContainer = apartmentCard.querySelector('.popup__photos');
+    var photos = photosContainer.querySelector('.popup__photo');
+    var userPhotos = apartment.offer.photos;
+
+    for (var i = 0; i < userPhotos.length; i++) {
+      photos.src = userPhotos[i];
+      var cloneImage = photos.cloneNode(true);
+      photosContainer.appendChild(cloneImage);
+    }
+  };
+  markPhotos();
+
+  apartmentCard.querySelector('.popup__avatar').src = apartment.author.avatar;
+  return apartmentCard;
+};
+
+map.appendChild(renderCard());
