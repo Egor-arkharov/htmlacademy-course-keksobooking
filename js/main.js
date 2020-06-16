@@ -31,6 +31,7 @@ var filtersContainer = document.querySelector('.map__filters-container');
 
 var popupTemplate = document.querySelector('#card').content;
 var card = popupTemplate.querySelector('.popup');
+var apartmentCard = card.cloneNode(true);
 
 var offsetX = (mapPin.getBoundingClientRect().width) / 2;
 var offsetY = mapPin.getBoundingClientRect().height;
@@ -87,6 +88,9 @@ var getApartment = function () {
   return apartmentOverview;
 };
 
+var apartment = getApartment();
+var apartmentOffer = apartment.offer;
+
 var getApartments = function () {
   var apartmentsArr = [];
   for (var i = 0; i < MAX_OFFER_QUANTITY; i++) {
@@ -125,10 +129,6 @@ var renderPins = function () {
 };
 
 renderPins();
-
-var apartment = getApartment();
-var apartmentCard = card.cloneNode(true);
-var apartmentOffer = apartment.offer;
 
 var renderCardValue = function (popupValue, cardValue) {
   apartmentCard.querySelector(popupValue).textContent = cardValue;
