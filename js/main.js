@@ -140,7 +140,7 @@ var markCardFeatures = function () {
   var popupFeaturesItems = popupFeaturesList.querySelectorAll('.popup__feature');
   var popupDescription = apartmentCard.querySelector('.popup__description');
 
-  apartmentCard.querySelector('.popup__features').textContent = '';
+  apartmentCard.querySelector('.popup__features').remove();
 
   for (var i = popupFeaturesItems.length - 1; i >= offerFeatures.length; i--) {
     popupFeaturesList.removeChild(popupFeaturesItems[i]);
