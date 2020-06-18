@@ -15,6 +15,8 @@ var MIN_LOCATION_X = 50;
 var MAX_LOCATION_X = 500;
 var MIN_LOCATION_Y = 130;
 var MAX_LOCATION_Y = 630;
+var MAIN_BUTTON= 0;
+
 
 var map = document.querySelector('.map');
 var pinTemplate = document.querySelector('#pin').content;
@@ -48,16 +50,15 @@ var mapPinMain = document.querySelector('.map__pin--main');
 // };
 
 var EvtKeys = {
-  ENTER: 'Enter',
-  MAIN_BUTTON: 0
+  ENTER: 'Enter'
 };
 
-var DISABLED_ROOMS = {
-  '1': ['1'],
-  '2': ['1', '2'],
-  '3': ['1', '2', '3'],
-  '100': ['0']
-};
+// var DISABLED_ROOMS = {
+//   '1': ['1'],
+//   '2': ['1', '2'],
+//   '3': ['1', '2', '3'],
+//   '100': ['0']
+// };
 
 var getRandomNum = function (min, max) {
   var num = min + Math.random() * (max - min);
@@ -170,7 +171,7 @@ var activatePage = function () {
 };
 
 mapPinMain.addEventListener('mousedown', function (evt) {
-  if (evt.button === EvtKeys.MAIN_BUTTON) {
+  if (evt.button === MAIN_BUTTON) {
     activatePage();
   }
 });
@@ -181,29 +182,23 @@ mapPinMain.addEventListener('keydown', function (evt) {
   }
 });
 
-var checkCapacity = function (item) {
-  if (item.selected) {
-    if (item.disabled) {
-      capacity.setCustomValidity('Количество гостей не соответствует количеству комнат');
-    } else {
-      capacity.setCustomValidity('');
-    }
-  }
-};
+var submit = form.querySelector('.ad-form__submit');
 
-rooms.addEventListener('change', function () {
-  for (var i = 0; i < capacity.options.length; i++) {
-    capacity[i].disabled = !DISABLED_ROOMS[rooms.value].includes(capacity.options[i].value);
-    checkCapacity(capacity[i]);
-  }
-});
-
-capacity.addEventListener('change', function () {
-  for (var i = 0; i < capacity.options.length; i++) {
-    checkCapacity(capacity[i]);
+form.addEventListener('submit', function (evt) {
+  if (
+    rooms.value === '1' && capacity.value === '1' ||
+    rooms.value === '2' && capacity.value === '1' ||
+    rooms.value === '2' && capacity.value === '2' ||
+    rooms.value === '3' && capacity.value === '1' ||
+    rooms.value === '3' && capacity.value === '2' ||
+    rooms.value === '3' && capacity.value === '3' ||
+    rooms.value === '100' && capacity.value === '0') {
+    submit.setCustomValidity('');
+  } else {
+    evt.preventDefault();
+    submit.setCustomValidity('Количество гостей не соответствует количеству комнат');
   }
 });
-
 
 // var renderCardValue = function (popupValue, cardValue) {
 //   apartmentCard.querySelector(popupValue).textContent = cardValue;
