@@ -35,8 +35,6 @@ var offsetY = mapPin.getBoundingClientRect().height;
 var address = document.querySelector('#address');
 var form = document.querySelector('.ad-form');
 var fieldsets = form.querySelectorAll('fieldset');
-var selects = form.querySelectorAll('select');
-var inputs = form.querySelectorAll('input');
 // var formFiltres = document.querySelector('#housing-features');
 var rooms = form.querySelector('#room_number');
 var capacity = form.querySelector('#capacity');
@@ -153,14 +151,8 @@ var renderPins = function () {
 
 renderPins();
 var disablePage = function () {
-  Array.from(fieldsets).forEach(function (fieldset) {
+  fieldsets.forEach(function (fieldset) {
     fieldset.disabled = true;
-  });
-  Array.from(selects).forEach(function (select) {
-    select.disabled = true;
-  });
-  Array.from(inputs).forEach(function (input) {
-    input.disabled = true;
   });
 };
 
@@ -170,14 +162,8 @@ var activatePage = function () {
   map.classList.remove('map--faded');
   form.classList.remove('ad-form--disabled');
 
-  Array.from(fieldsets).forEach(function (fieldset) {
+  fieldsets.forEach(function (fieldset) {
     fieldset.disabled = false;
-  });
-  Array.from(selects).forEach(function (select) {
-    select.disabled = false;
-  });
-  Array.from(inputs).forEach(function (input) {
-    input.disabled = false;
   });
 };
 
