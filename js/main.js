@@ -15,17 +15,18 @@ var MIN_LOCATION_X = 50;
 var MAX_LOCATION_X = 500;
 var MIN_LOCATION_Y = 130;
 var MAX_LOCATION_Y = 630;
-var MAIN_BUTTON= 0;
-
+var MAIN_BUTTON = 0;
 
 var map = document.querySelector('.map');
 var pinTemplate = document.querySelector('#pin').content;
 var mapPin = document.querySelector('.map__pin');
+var mapPinMain = document.querySelector('.map__pin--main');
 var mapPins = document.querySelector('.map__pins');
 // var filtersContainer = document.querySelector('.map__filters-container');
 
 // var popupTemplate = document.querySelector('#card').content;
 // var card = popupTemplate.querySelector('.popup');
+// var buttonClose = card.querySelector('.popup__close');
 // var apartmentCard = card.cloneNode(true);
 
 var offsetX = (mapPin.getBoundingClientRect().width) / 2;
@@ -33,32 +34,32 @@ var offsetY = mapPin.getBoundingClientRect().height;
 
 var address = document.querySelector('#address');
 var form = document.querySelector('.ad-form');
-var formFieldsets = form.children;
-var formFiltres = document.querySelector('#housing-features');
+var fieldsets = form.querySelectorAll('fieldset');
+var selects = form.querySelectorAll('select');
+var inputs = form.querySelectorAll('input');
+// var formFiltres = document.querySelector('#housing-features');
 var rooms = form.querySelector('#room_number');
 var capacity = form.querySelector('#capacity');
 
 address.value = offsetX + ', ' + offsetY;
 
-var mapPinMain = document.querySelector('.map__pin--main');
-
 // var ApartmentTypesTranslate = {
-//   FLAT: 'Квартира',
 //   BUNGALO: 'Бунгало',
+//   FLAT: 'Квартира',
 //   HOUSE: 'Дом',
 //   PALACE: 'Дворец'
+// };
+
+// var apartmentPrices = {
+//   bungalo: 0,
+//   flat: 1000,
+//   house: 5000,
+//   palace: 10000
 // };
 
 var EvtKeys = {
   ENTER: 'Enter'
 };
-
-// var DISABLED_ROOMS = {
-//   '1': ['1'],
-//   '2': ['1', '2'],
-//   '3': ['1', '2', '3'],
-//   '100': ['0']
-// };
 
 var getRandomNum = function (min, max) {
   var num = min + Math.random() * (max - min);
@@ -151,12 +152,16 @@ var renderPins = function () {
 };
 
 renderPins();
-
 var disablePage = function () {
-  for (var i = 0; i < formFieldsets.length; i++) {
-    formFieldsets[i].setAttribute('disabled', 'true');
-    formFiltres.setAttribute('disabled', 'true');
-  }
+  Array.from(fieldsets).forEach(function (fieldset) {
+    fieldset.disabled = true;
+  });
+  Array.from(selects).forEach(function (select) {
+    select.disabled = true;
+  });
+  Array.from(inputs).forEach(function (input) {
+    input.disabled = true;
+  });
 };
 
 disablePage();
@@ -164,10 +169,16 @@ disablePage();
 var activatePage = function () {
   map.classList.remove('map--faded');
   form.classList.remove('ad-form--disabled');
-  for (var i = 0; i < formFieldsets.length; i++) {
-    formFieldsets[i].removeAttribute('disabled', true);
-    formFiltres.removeAttribute('disabled', 'true');
-  }
+
+  Array.from(fieldsets).forEach(function (fieldset) {
+    fieldset.disabled = false;
+  });
+  Array.from(selects).forEach(function (select) {
+    select.disabled = false;
+  });
+  Array.from(inputs).forEach(function (input) {
+    input.disabled = false;
+  });
 };
 
 mapPinMain.addEventListener('mousedown', function (evt) {
@@ -182,23 +193,35 @@ mapPinMain.addEventListener('keydown', function (evt) {
   }
 });
 
-var submit = form.querySelector('.ad-form__submit');
+var validateCapacity = function () {
+  var ROOM_NUM = +rooms.value;
+  var GUEST_NUM = +capacity.value;
+  var isValidChoice = ROOM_NUM === 100 ? (GUEST_NUM === 0) : (ROOM_NUM > GUEST_NUM && GUEST_NUM !== 0 || ROOM_NUM === GUEST_NUM);
 
-form.addEventListener('submit', function (evt) {
-  if (
-    rooms.value === '1' && capacity.value === '1' ||
-    rooms.value === '2' && capacity.value === '1' ||
-    rooms.value === '2' && capacity.value === '2' ||
-    rooms.value === '3' && capacity.value === '1' ||
-    rooms.value === '3' && capacity.value === '2' ||
-    rooms.value === '3' && capacity.value === '3' ||
-    rooms.value === '100' && capacity.value === '0') {
-    submit.setCustomValidity('');
+  if (isValidChoice) {
+    capacity.setCustomValidity('');
   } else {
-    evt.preventDefault();
-    submit.setCustomValidity('Количество гостей не соответствует количеству комнат');
+    capacity.setCustomValidity('Количество гостей не соответствует количеству комнат');
   }
-});
+};
+
+rooms.addEventListener('change', validateCapacity);
+capacity.addEventListener('change', validateCapacity);
+
+// var userType = form.querySelector('#type');
+// var userPrice = form.querySelector('#price');
+
+// userType.addEventListener('change', function () {
+//   for (var i = 0; i < TYPES.length; i++) {
+//     if (userType.value === TYPES[i]) {
+//       userPrice.setAttribute('min', apartmentPrices[TYPES[i]]);
+//       userPrice.setAttribute('placeholder', apartmentPrices[TYPES[i]]);
+//     }
+//   }
+// });
+
+// var timein = form.querySelector('#timein');
+// var timeout = form.querySelector('#timeout');
 
 // var renderCardValue = function (popupValue, cardValue) {
 //   apartmentCard.querySelector(popupValue).textContent = cardValue;
@@ -249,4 +272,40 @@ form.addEventListener('submit', function (evt) {
 //   return apartmentCard;
 // };
 
-// map.insertBefore(renderCard(), filtersContainer);
+// var onPopupEscPress = function (evt) {
+//   if (evt.key === EvtKeys.ESCAPE) {
+//     evt.preventDefault();
+//     closePopup();
+//   }
+// };
+
+// var openPopup = function () {
+//   map.insertBefore(renderCard(), filtersContainer);
+
+//   document.addEventListener('keydown', onPopupEscPress);
+// };
+
+// var closePopup = function () {
+//   card.classList.add('hidden');
+//   document.removeEventListener('keydown', onPopupEscPress);
+// };
+
+// mapPin.addEventListener('click', function () {
+//   openPopup();
+// });
+
+// mapPin.addEventListener('keydown', function (evt) {
+//   if (evt.key === EvtKeys.ENTER) {
+//     openPopup();
+//   }
+// });
+
+// buttonClose.addEventListener('click', function () {
+//   closePopup();
+// });
+
+// buttonClose.addEventListener('keydown', function (evt) {
+//   if (evt.key === EvtKeys.ENTER) {
+//     closePopup();
+//   }
+// });
