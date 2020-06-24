@@ -179,6 +179,8 @@ var activatePage = function () {
   fieldsets.forEach(function (fieldset) {
     fieldset.disabled = false;
   });
+
+  getIconsClicks();
 };
 
 mapPinMain.addEventListener('mousedown', function (evt) {
@@ -269,7 +271,6 @@ var markCardPhotos = function () {
 };
 
 var markCardText = function () {
-
   var offerType = getApartmentOffer().type.toUpperCase();
 
   renderCardValue('.popup__title', getApartmentOffer().title);
@@ -303,13 +304,11 @@ var openPopup = function () {
   document.addEventListener('keydown', onPopupEscPress);
 };
 
-var funct = function () {
+var getIconsClicks = function () {
   mapIcons.forEach(function (icon) {
     icon.addEventListener('click', openPopup);
   });
 };
-
-funct();
 
 var closePopup = function () {
   apartmentCard.remove();
