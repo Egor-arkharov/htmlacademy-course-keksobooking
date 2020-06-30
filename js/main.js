@@ -1,7 +1,6 @@
 'use strict';
 
 var TITLES = ['2-комнтаные апартаменты в центре', 'Элитное жилье в районе Аракава', 'Новостройка в районе Кацусика (рядом с ж/д)', 'Двушка с видом на парк Инокасира', 'Квартира рядом с Императорским дворцом', 'Вторичное жилье рядом со станцией Тораномон', 'Квартира в Маруноути с паркингом', 'Двухэтажное жилье у реки Канда'];
-var TYPES = ['palace', 'flat', 'house', 'bungalo'];
 var CHECKINS = ['12:00', '13:00', '14:00'];
 var CHECKOUTS = ['12:00', '13:00', '14:00'];
 var OFFER_FEATURES = ['wifi', 'dishwasher', 'parking', 'washer', 'elevator', 'conditioner'];
@@ -22,12 +21,12 @@ var pinTemplate = document.querySelector('#pin').content;
 var mapPin = document.querySelector('.map__pin');
 var mapPinMain = document.querySelector('.map__pin--main');
 var mapPins = document.querySelector('.map__pins');
-// var filtersContainer = document.querySelector('.map__filters-container');
+var filtersContainer = document.querySelector('.map__filters-container');
 
-// var popupTemplate = document.querySelector('#card').content;
-// var card = popupTemplate.querySelector('.popup');
-// var buttonClose = card.querySelector('.popup__close');
-// var apartmentCard = card.cloneNode(true);
+var popupTemplate = document.querySelector('#card').content;
+var card = popupTemplate.querySelector('.popup');
+var apartmentCard = card.cloneNode(true);
+var buttonClose = apartmentCard.querySelector('.popup__close');
 
 var offsetX = (mapPin.getBoundingClientRect().width) / 2;
 var offsetY = mapPin.getBoundingClientRect().height;
@@ -35,28 +34,41 @@ var offsetY = mapPin.getBoundingClientRect().height;
 var address = document.querySelector('#address');
 var form = document.querySelector('.ad-form');
 var fieldsets = form.querySelectorAll('fieldset');
-// var formFiltres = document.querySelector('#housing-features');
 var rooms = form.querySelector('#room_number');
 var capacity = form.querySelector('#capacity');
+var userType = form.querySelector('#type');
+var userPrice = form.querySelector('#price');
+var timein = form.querySelector('#timein');
+var timeout = form.querySelector('#timeout');
 
 address.value = offsetX + ', ' + offsetY;
 
-// var ApartmentTypesTranslate = {
-//   BUNGALO: 'Бунгало',
-//   FLAT: 'Квартира',
-//   HOUSE: 'Дом',
-//   PALACE: 'Дворец'
-// };
-
-// var apartmentPrices = {
-//   bungalo: 0,
-//   flat: 1000,
-//   house: 5000,
-//   palace: 10000
-// };
+var apartments = {
+  BUNGALO: {
+    type: 'BUNGALO',
+    name: 'Бунгало',
+    price: 0
+  },
+  FLAT: {
+    type: 'FLAT',
+    name: 'Квартира',
+    price: 1000
+  },
+  HOUSE: {
+    type: 'HOUSE',
+    name: 'Дом',
+    price: 5000
+  },
+  PALACE: {
+    type: 'PALACE',
+    name: 'Дворец',
+    price: 10000
+  }
+};
 
 var EvtKeys = {
-  ENTER: 'Enter'
+  ENTER: 'Enter',
+  ESCAPE: 'Escape'
 };
 
 var getRandomNum = function (min, max) {
@@ -85,6 +97,10 @@ var getApartment = function () {
   var locationX = getRandomNum(MIN_LOCATION_X, MAX_LOCATION_X);
   var locationY = getRandomNum(MIN_LOCATION_Y, MAX_LOCATION_Y);
 
+  var offerTypes = Object.values(apartments).map(function (value) {
+    return value.type;
+  });
+
   var apartmentOverview = {
     author: {
       avatar: 'img/avatars/user' + imgAddress + '.png'
@@ -93,7 +109,7 @@ var getApartment = function () {
       title: getOfferValue(TITLES),
       address: locationX + ', ' + locationY,
       price: getRandomNum(MIN_OFFER_VALUE, MAX_PRICE_VALUE),
-      type: getOfferValue(TYPES),
+      type: getOfferValue(offerTypes),
       rooms: getRandomNum(MIN_OFFER_VALUE, MAX_ROOMS_VALUE),
       guests: getRandomNum(MIN_OFFER_VALUE, MAX_GUESTS_VALUE),
       checkin: getOfferValue(CHECKINS),
@@ -111,9 +127,6 @@ var getApartment = function () {
   return apartmentOverview;
 };
 
-// var apartment = getApartment();
-// var apartmentOffer = apartment.offer;
-
 var getApartments = function () {
   var apartmentsArr = [];
   for (var i = 0; i < MAX_OFFER_QUANTITY; i++) {
@@ -123,33 +136,37 @@ var getApartments = function () {
   return apartmentsArr;
 };
 
-var renderPin = function (newApartment) {
-  var newPin = pinTemplate.cloneNode(true);
-  var x = newApartment.location.x - offsetX;
-  var y = newApartment.location.y - offsetY;
-  newPin.querySelector('.map__pin').style.left = x + 'px';
-  newPin.querySelector('.map__pin').style.top = y + 'px';
+var renderPin = function (pin) {
+  var newPin = pinTemplate.querySelector('.map__pin').cloneNode(true);
+
+  var x = pin.location.x - offsetX;
+  var y = pin.location.y - offsetY;
+  newPin.style.left = x + 'px';
+  newPin.style.top = y + 'px';
 
   var newAppartImg = newPin.querySelector('img');
-  newAppartImg.src = newApartment.author.avatar;
-  newAppartImg.alt = newApartment.offer.title;
+  newAppartImg.src = pin.author.avatar;
+  newAppartImg.alt = pin.offer.title;
+
+  newPin.addEventListener('click', function () {
+    openPopup(pin);
+  });
 
   return newPin;
 };
 
 var renderPins = function () {
   var fragment = document.createDocumentFragment();
-  var apartments = getApartments();
+  var newPins = getApartments();
 
   for (var i = 0; i < MAX_OFFER_QUANTITY; i++) {
-    var adPin = renderPin(apartments[i]);
+    var adPin = renderPin(newPins[i]);
     fragment.appendChild(adPin);
   }
 
   mapPins.appendChild(fragment);
 };
 
-renderPins();
 var disablePage = function () {
   fieldsets.forEach(function (fieldset) {
     fieldset.disabled = true;
@@ -159,6 +176,10 @@ var disablePage = function () {
 disablePage();
 
 var activatePage = function () {
+  if (map.classList.contains('map--faded')) {
+    renderPins();
+  }
+
   map.classList.remove('map--faded');
   form.classList.remove('ad-form--disabled');
 
@@ -191,107 +212,109 @@ var validateCapacity = function () {
   }
 };
 
+var validatePrice = function (e) {
+  var value = e.target.value.toUpperCase();
+  userPrice.setAttribute('min', apartments[value].price);
+  userPrice.setAttribute('placeholder', apartments[value].price);
+
+};
+
+var validateTimeOut = function () {
+  timeout.value = timein.value;
+};
+
+var validateTimeIn = function () {
+  timein.value = timeout.value;
+};
+
 rooms.addEventListener('change', validateCapacity);
 capacity.addEventListener('change', validateCapacity);
 
-// var userType = form.querySelector('#type');
-// var userPrice = form.querySelector('#price');
+userType.addEventListener('change', validatePrice);
 
-// userType.addEventListener('change', function () {
-//   for (var i = 0; i < TYPES.length; i++) {
-//     if (userType.value === TYPES[i]) {
-//       userPrice.setAttribute('min', apartmentPrices[TYPES[i]]);
-//       userPrice.setAttribute('placeholder', apartmentPrices[TYPES[i]]);
-//     }
-//   }
-// });
+timein.addEventListener('change', validateTimeOut);
+timeout.addEventListener('change', validateTimeIn);
 
-// var timein = form.querySelector('#timein');
-// var timeout = form.querySelector('#timeout');
+var renderCardValue = function (popupValue, cardValue) {
+  apartmentCard.querySelector(popupValue).textContent = cardValue;
+};
 
-// var renderCardValue = function (popupValue, cardValue) {
-//   apartmentCard.querySelector(popupValue).textContent = cardValue;
-// };
+var markCardFeatures = function (offerFeatures) {
+  var cardFeatures = apartmentCard.querySelectorAll('.popup__feature');
 
-// var markCardFeatures = function () {
-//   var offerFeatures = getApartment().offer.features;
-//   var popupFeaturesList = popupTemplate.querySelector('.popup__features');
-//   var popupFeaturesItems = popupFeaturesList.querySelectorAll('.popup__feature');
-//   var popupDescription = apartmentCard.querySelector('.popup__description');
+  for (var i = 0; i < cardFeatures.length; i++) {
+    cardFeatures[i].classList.add('hidden');
+    for (var j = 0; j < offerFeatures.length; j++) {
+      cardFeatures[j].classList.remove('hidden');
+    }
+  }
+};
 
-//   apartmentCard.querySelector('.popup__features').remove();
+var markCardPhotos = function (userPhotos) {
+  var photosContainer = apartmentCard.querySelector('.popup__photos');
+  var photos = photosContainer.querySelector('.popup__photo');
+  var lastPhotos = apartmentCard.querySelectorAll('.popup__photo');
 
-//   for (var i = popupFeaturesItems.length - 1; i >= offerFeatures.length; i--) {
-//     popupFeaturesList.removeChild(popupFeaturesItems[i]);
-//   }
+  for (var j = 0; j < lastPhotos.length; j++) {
+    lastPhotos[j].remove();
+  }
 
-//   apartmentCard.insertBefore(popupFeaturesList, popupDescription);
-// };
+  for (var i = 0; i < userPhotos.length; i++) {
+    photos.src = userPhotos[i];
+    var cloneImage = photos.cloneNode(true);
+    photosContainer.appendChild(cloneImage);
+  }
+};
 
-// var markCardPhotos = function () {
-//   var photosContainer = apartmentCard.querySelector('.popup__photos');
-//   var photos = photosContainer.querySelector('.popup__photo');
-//   var userPhotos = apartmentOffer.photos;
+var markCardText = function (offer, author) {
+  var offerType = offer.type.toUpperCase();
 
-//   for (var i = 0; i < userPhotos.length; i++) {
-//     photos.src = userPhotos[i];
-//     var cloneImage = photos.cloneNode(true);
-//     photosContainer.appendChild(cloneImage);
-//   }
-// };
+  renderCardValue('.popup__title', offer.title);
+  renderCardValue('.popup__text--price', offer.price + '₽/ночь');
+  renderCardValue('.popup__type', apartments[offerType].name);
+  renderCardValue('.popup__text--capacity', offer.rooms + ' комнаты для ' + offer.guests);
+  renderCardValue('.popup__text--time', 'Заезд после ' + offer.checkin + ', выезд до ' + offer.checkout);
+  renderCardValue('.popup__description', offer.description);
+  apartmentCard.querySelector('.popup__avatar').src = author.avatar;
+};
 
-// var markCardText = function () {
-//   renderCardValue('.popup__title', apartmentOffer.title);
-//   renderCardValue('.popup__text--price', apartmentOffer.price + '₽/ночь');
-//   renderCardValue('.popup__type', ApartmentTypesTranslate[apartmentOffer.type.toUpperCase()]);
-//   renderCardValue('.popup__text--capacity', apartmentOffer.rooms + ' комнаты для ' + apartmentOffer.guests);
-//   renderCardValue('.popup__text--time', 'Заезд после ' + apartmentOffer.checkin + ', выезд до ' + apartmentOffer.checkout);
-//   renderCardValue('.popup__description', apartmentOffer.description);
-//   apartmentCard.querySelector('.popup__avatar').src = apartment.author.avatar;
-// };
+var renderCard = function (data) {
+  markCardFeatures(data.offer.features);
+  markCardPhotos(data.offer.photos);
+  markCardText(data.offer, data.author);
 
-// var renderCard = function () {
-//   markCardFeatures();
-//   markCardPhotos();
-//   markCardText();
+  return apartmentCard;
+};
 
-//   return apartmentCard;
-// };
+var onPopupEscPress = function (evt) {
+  if (evt.key === EvtKeys.ESCAPE) {
+    evt.preventDefault();
+    closePopup();
+  }
+};
 
-// var onPopupEscPress = function (evt) {
-//   if (evt.key === EvtKeys.ESCAPE) {
-//     evt.preventDefault();
-//     closePopup();
-//   }
-// };
+var openPopup = function (data) {
+  map.insertBefore(renderCard(data), filtersContainer);
+  document.addEventListener('keydown', onPopupEscPress);
+};
 
-// var openPopup = function () {
-//   map.insertBefore(renderCard(), filtersContainer);
+var closePopup = function () {
+  apartmentCard.remove();
+  mapPin.removeEventListener('click', openPopup);
+};
 
-//   document.addEventListener('keydown', onPopupEscPress);
-// };
+mapPin.addEventListener('keydown', function (evt) {
+  if (evt.key === EvtKeys.ENTER) {
+    openPopup();
+  }
+});
 
-// var closePopup = function () {
-//   card.classList.add('hidden');
-//   document.removeEventListener('keydown', onPopupEscPress);
-// };
+buttonClose.addEventListener('click', function () {
+  closePopup();
+});
 
-// mapPin.addEventListener('click', function () {
-//   openPopup();
-// });
-
-// mapPin.addEventListener('keydown', function (evt) {
-//   if (evt.key === EvtKeys.ENTER) {
-//     openPopup();
-//   }
-// });
-
-// buttonClose.addEventListener('click', function () {
-//   closePopup();
-// });
-
-// buttonClose.addEventListener('keydown', function (evt) {
-//   if (evt.key === EvtKeys.ENTER) {
-//     closePopup();
-//   }
-// });
+buttonClose.addEventListener('keydown', function (evt) {
+  if (evt.key === EvtKeys.ENTER) {
+    closePopup();
+  }
+});
