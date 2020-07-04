@@ -16,14 +16,6 @@
   var MIN_LOCATION_Y = 130;
   var MAX_LOCATION_Y = 630;
 
-  var mapPin = document.querySelector('.map__pin');
-
-  var offsetX = (mapPin.getBoundingClientRect().width) / 2;
-  var offsetY = mapPin.getBoundingClientRect().height;
-
-  var address = document.querySelector('#address');
-  address.value = offsetX + ', ' + offsetY;
-
   var apartments = {
     BUNGALO: {
       type: 'BUNGALO',
