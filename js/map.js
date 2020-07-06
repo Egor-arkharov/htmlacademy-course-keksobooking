@@ -1,8 +1,6 @@
 'use strict';
 
 (function () {
-  var PIN_SIZE_X = 65;
-  var PIN_POINT_SIZE_Y = 22;
   var MAIN_BUTTON = 0;
 
   var map = document.querySelector('.map');
@@ -11,7 +9,6 @@
   var mapPinMain = document.querySelector('.map__pin--main');
   var form = document.querySelector('.ad-form');
   var fieldsets = form.querySelectorAll('fieldset');
-  var address = document.querySelector('#address');
 
   var buttonClose = window.card.apartmentCard.querySelector('.popup__close');
 
@@ -31,8 +28,6 @@
     fieldsets.forEach(function (fieldset) {
       fieldset.disabled = false;
     });
-
-    address.value = (mapPin.offsetLeft + (PIN_SIZE_X / 2)) + ', ' + (mapPin.offsetTop + (PIN_SIZE_X + PIN_POINT_SIZE_Y));
   };
 
   mapPinMain.addEventListener('mousedown', function (evt) {

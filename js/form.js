@@ -8,11 +8,6 @@
   var userPrice = form.querySelector('#price');
   var timein = form.querySelector('#timein');
   var timeout = form.querySelector('#timeout');
-  var address = form.querySelector('#address');
-
-  var mapPin = document.querySelector('.map__pin');
-  var offsetX = (mapPin.getBoundingClientRect().width) / 2;
-  var offsetY = (mapPin.getBoundingClientRect().height) / 2;
 
   var apartments = {
     BUNGALO: {
@@ -36,8 +31,6 @@
       price: 10000
     }
   };
-
-  address.value = (mapPin.offsetLeft + offsetX) + ', ' + (mapPin.offsetTop + offsetY);
 
   var validateCapacity = function () {
     var ROOM_NUM = +rooms.value;

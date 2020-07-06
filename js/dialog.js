@@ -1,15 +1,18 @@
 'use strict';
 
 (function () {
+  var mapPin = document.querySelector('.map__pin');
+  var PIN_SIZE_X = mapPin.getBoundingClientRect().width;
+  var PIN_SIZE_Y = mapPin.getBoundingClientRect().height;
 
-  var PIN_SIZE_X = 65;
-  var PIN_POINT_SIZE_Y = 22;
+  var mapPinMain = document.querySelector('.map__pin--main');
+  var PIN_POINT_SIZE_Y = Number(window.getComputedStyle(mapPinMain, ':after').height.replace(/\D/g, ''));
+
   var WINDOW_SIZE_X_LEFT = 0;
   var WINDOW_SIZE_X_RIGHT = 1200;
   var WINDOW_SIZE_Y_TOP = 130;
   var WINDOW_SIZE_Y_BOTTOM = 630;
 
-  var mapPin = document.querySelector('.map__pin');
   var address = document.querySelector('#address');
 
   mapPin.addEventListener('mousedown', function (evt) {
@@ -34,15 +37,15 @@
         y: moveEvt.clientY
       };
 
-      if ((mapPin.offsetTop - shift.y) >= WINDOW_SIZE_Y_TOP && (mapPin.offsetTop - shift.y) <= WINDOW_SIZE_Y_BOTTOM) {
+      if ((mapPin.offsetTop - shift.y) >= (WINDOW_SIZE_Y_TOP - PIN_POINT_SIZE_Y - PIN_SIZE_Y) && (mapPin.offsetTop - shift.y) <= (WINDOW_SIZE_Y_BOTTOM - PIN_POINT_SIZE_Y - PIN_SIZE_Y)) {
         mapPin.style.top = (mapPin.offsetTop - shift.y) + 'px';
       }
 
-      if ((mapPin.offsetLeft - shift.x) >= WINDOW_SIZE_X_LEFT && (mapPin.offsetLeft - shift.x) <= WINDOW_SIZE_X_RIGHT) {
+      if ((mapPin.offsetLeft - shift.x) >= WINDOW_SIZE_X_LEFT - Math.round((PIN_SIZE_X / 2)) && (mapPin.offsetLeft - shift.x) <= WINDOW_SIZE_X_RIGHT - Math.ceil((PIN_SIZE_X / 2))) {
         mapPin.style.left = (mapPin.offsetLeft - shift.x) + 'px';
       }
 
-      address.value = (mapPin.offsetLeft - shift.x + (PIN_SIZE_X / 2)) + ', ' + (mapPin.offsetTop - shift.y + (PIN_SIZE_X + PIN_POINT_SIZE_Y));
+      address.value = Math.round((mapPin.offsetLeft - shift.x + (PIN_SIZE_X / 2))) + ', ' + (mapPin.offsetTop - shift.y + (PIN_SIZE_Y + PIN_POINT_SIZE_Y));
     };
 
     var onMouseUp = function (upEvt) {
