@@ -2,10 +2,17 @@
 
 (function () {
   var mapPin = document.querySelector('.map__pin');
-  var address = document.querySelector('#address');
-  var offsetX = (mapPin.getBoundingClientRect().width) / 2;
-  var offsetY = (mapPin.getBoundingClientRect().height) / 2;
+  var pinSizeX = mapPin.getBoundingClientRect().width;
+  var pinSizeY = mapPin.getBoundingClientRect().height;
+  var pinHalfSize = Math.round(pinSizeX / 2);
 
-  address.value = Math.round((mapPin.offsetLeft + offsetX)) + ', ' + Math.round((mapPin.offsetTop + offsetY));
+  var mapPinMain = document.querySelector('.map__pin--main');
+  var pinPointSizeY = Number(window.getComputedStyle(mapPinMain, ':after').height.replace(/\D/g, ''));
 
+  window.utile = {
+    pinSizeX: pinSizeX,
+    pinSizeY: pinSizeY,
+    pinPointSizeY: pinPointSizeY,
+    pinHalfSize: pinHalfSize
+  };
 })();

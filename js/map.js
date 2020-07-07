@@ -10,6 +10,7 @@
   var form = document.querySelector('.ad-form');
   var fieldsets = form.querySelectorAll('fieldset');
 
+  var address = document.querySelector('#address');
   var buttonClose = window.card.apartmentCard.querySelector('.popup__close');
 
   var EvtKeys = {
@@ -28,6 +29,8 @@
     fieldsets.forEach(function (fieldset) {
       fieldset.disabled = false;
     });
+
+    address.value = (mapPin.offsetLeft + window.utile.pinSizeY + window.utile.pinPointSizeY) + ', ' + (mapPin.offsetTop + window.utile.pinHalfSize);
   };
 
   mapPinMain.addEventListener('mousedown', function (evt) {
