@@ -1,20 +1,13 @@
 'use strict';
 
 (function () {
+  var MAX_OFFER_QUANTITY = 8;
+
   var mapPin = document.querySelector('.map__pin');
   var pinTemplate = document.querySelector('#pin').content;
   var offsetX = (mapPin.getBoundingClientRect().width) / 2;
   var offsetY = mapPin.getBoundingClientRect().height;
   var mapPins = document.querySelector('.map__pins');
-
-  var getApartments = function () {
-    var apartmentsArr = [];
-    for (var i = 0; i < window.data.MAX_OFFER_QUANTITY; i++) {
-      apartmentsArr[i] = window.data.getApartment(i);
-    }
-
-    return apartmentsArr;
-  };
 
   var renderPin = function (pin) {
     var newPin = pinTemplate.querySelector('.map__pin').cloneNode(true);
@@ -35,21 +28,37 @@
     return newPin;
   };
 
-  var renderPins = function () {
+  var renderPins = function (pins) {
     var fragment = document.createDocumentFragment();
-    var newPins = getApartments();
 
-    for (var i = 0; i < window.data.MAX_OFFER_QUANTITY; i++) {
-      var adPin = renderPin(newPins[i]);
+    for (var i = 0; i < MAX_OFFER_QUANTITY; i++) {
+      var adPin = renderPin(pins[i]);
       fragment.appendChild(adPin);
     }
 
     mapPins.appendChild(fragment);
   };
 
+  var successHandler = function (pins) {
+    renderPins(pins);
+  };
+
+  var errorHandler = function (errorMessage) {
+    var node = document.createElement('div');
+    node.style = 'z-index: 100; margin: 0 auto; text-align: center; background-color: red;';
+    node.style.position = 'absolute';
+    node.style.left = 0;
+    node.style.right = 0;
+    node.style.fontSize = '30px';
+
+    node.textContent = errorMessage;
+    document.body.insertAdjacentElement('afterbegin', node);
+  };
+
   window.pin = {
     renderPin: renderPin,
-    renderPins: renderPins
+    successHandler: successHandler,
+    errorHandler: errorHandler
   };
 
 })();

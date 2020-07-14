@@ -5,6 +5,21 @@
   var card = popupTemplate.querySelector('.popup');
   var apartmentCard = card.cloneNode(true);
 
+  var apartments = {
+    BUNGALO: {
+      name: 'Бунгало',
+    },
+    FLAT: {
+      name: 'Квартира',
+    },
+    HOUSE: {
+      name: 'Дом',
+    },
+    PALACE: {
+      name: 'Дворец',
+    }
+  };
+
   var renderCardValue = function (popupValue, cardValue) {
     apartmentCard.querySelector(popupValue).textContent = cardValue;
   };
@@ -25,14 +40,20 @@
     var photos = photosContainer.querySelector('.popup__photo');
     var lastPhotos = apartmentCard.querySelectorAll('.popup__photo');
 
-    for (var j = 0; j < lastPhotos.length; j++) {
-      lastPhotos[j].remove();
-    }
+    if (userPhotos.length === 0) {
+      photosContainer.classList.add('hidden');
+    } else {
+      photosContainer.classList.remove('hidden');
 
-    for (var i = 0; i < userPhotos.length; i++) {
-      photos.src = userPhotos[i];
-      var cloneImage = photos.cloneNode(true);
-      photosContainer.appendChild(cloneImage);
+      for (var j = 0; j < lastPhotos.length; j++) {
+        lastPhotos[j].remove();
+      }
+
+      for (var i = 0; i < userPhotos.length; i++) {
+        photos.src = userPhotos[i];
+        var cloneImage = photos.cloneNode(true);
+        photosContainer.appendChild(cloneImage);
+      }
     }
   };
 
@@ -41,7 +62,7 @@
 
     renderCardValue('.popup__title', offer.title);
     renderCardValue('.popup__text--price', offer.price + '₽/ночь');
-    renderCardValue('.popup__type', window.data.apartments[offerType].name);
+    renderCardValue('.popup__type', apartments[offerType].name);
     renderCardValue('.popup__text--capacity', offer.rooms + ' комнаты для ' + offer.guests);
     renderCardValue('.popup__text--time', 'Заезд после ' + offer.checkin + ', выезд до ' + offer.checkout);
     renderCardValue('.popup__description', offer.description);
@@ -50,8 +71,8 @@
 
   var renderCard = function (data) {
     markCardFeatures(data.offer.features);
-    markCardPhotos(data.offer.photos);
     markCardText(data.offer, data.author);
+    markCardPhotos(data.offer.photos);
 
     return apartmentCard;
   };
