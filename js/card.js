@@ -4,10 +4,11 @@
   var popupTemplate = document.querySelector('#card').content;
   var card = popupTemplate.querySelector('.popup');
   var apartmentCard = card.cloneNode(true);
+  var photosContainer = apartmentCard.querySelector('.popup__photos');
 
   var apartments = {
     BUNGALO: 'Бунгало',
-    FLAT:'Квартира',
+    FLAT: 'Квартира',
     HOUSE: 'Дом',
     PALACE: 'Дворец',
   };
@@ -27,32 +28,33 @@
     }
   };
 
-  var clearOldPhotos = function (oldPhotos) {
-    for (var i = 0; i < oldPhotos.length; i++) {
-      oldPhotos[i].remove();
+  var clearOldPhotos = function () {
+    var lastPhotos = apartmentCard.querySelectorAll('.popup__photo');
+
+    for (var i = 0; i < lastPhotos.length; i++) {
+      lastPhotos[i].remove();
     }
   };
 
-  var addNewPhotos = function (newPhotos, newPhoto, container) {
+
+  var addNewPhotos = function (newPhotos, newPhoto) {
     for (var i = 0; i < newPhotos.length; i++) {
       newPhoto.src = newPhotos[i];
       var cloneImage = newPhoto.cloneNode(true);
-      container.appendChild(cloneImage);
+      photosContainer.appendChild(cloneImage);
     }
   };
 
   var markCardPhotos = function (userPhotos) {
-    var photosContainer = apartmentCard.querySelector('.popup__photos');
     var photo = photosContainer.querySelector('.popup__photo');
-    var lastPhotos = apartmentCard.querySelectorAll('.popup__photo');
 
     if (userPhotos.length === 0) {
       photosContainer.classList.add('hidden');
     } else {
       photosContainer.classList.remove('hidden');
 
-      clearOldPhotos(lastPhotos);
-      addNewPhotos(userPhotos, photo, photosContainer);
+      clearOldPhotos();
+      addNewPhotos(userPhotos, photo);
     }
   };
 

@@ -56,7 +56,6 @@
   };
 
   window.pin = {
-    renderPin: renderPin,
     successHandler: successHandler,
     errorHandler: errorHandler
   };
