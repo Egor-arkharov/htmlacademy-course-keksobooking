@@ -4,7 +4,6 @@
   var popupTemplate = document.querySelector('#card').content;
   var card = popupTemplate.querySelector('.popup');
   var apartmentCard = card.cloneNode(true);
-  var photosContainer = apartmentCard.querySelector('.popup__photos');
 
   var apartments = {
     BUNGALO: 'Бунгало',
@@ -36,16 +35,8 @@
     }
   };
 
-
-  var addNewPhotos = function (newPhotos, newPhoto) {
-    for (var i = 0; i < newPhotos.length; i++) {
-      newPhoto.src = newPhotos[i];
-      var cloneImage = newPhoto.cloneNode(true);
-      photosContainer.appendChild(cloneImage);
-    }
-  };
-
   var markCardPhotos = function (userPhotos) {
+    var photosContainer = apartmentCard.querySelector('.popup__photos');
     var photo = photosContainer.querySelector('.popup__photo');
 
     if (userPhotos.length === 0) {
@@ -54,7 +45,12 @@
       photosContainer.classList.remove('hidden');
 
       clearOldPhotos();
-      addNewPhotos(userPhotos, photo);
+
+      for (var i = 0; i < userPhotos.length; i++) {
+        photo.src = userPhotos[i];
+        var cloneImage = photo.cloneNode(true);
+        photosContainer.appendChild(cloneImage);
+      }
     }
   };
 
