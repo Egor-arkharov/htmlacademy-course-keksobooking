@@ -6,18 +6,10 @@
   var apartmentCard = card.cloneNode(true);
 
   var apartments = {
-    BUNGALO: {
-      name: 'Бунгало',
-    },
-    FLAT: {
-      name: 'Квартира',
-    },
-    HOUSE: {
-      name: 'Дом',
-    },
-    PALACE: {
-      name: 'Дворец',
-    }
+    BUNGALO: 'Бунгало',
+    FLAT:'Квартира',
+    HOUSE: 'Дом',
+    PALACE: 'Дворец',
   };
 
   var renderCardValue = function (popupValue, cardValue) {
@@ -35,9 +27,23 @@
     }
   };
 
+  var clearOldPhotos = function (oldPhotos) {
+    for (var i = 0; i < oldPhotos.length; i++) {
+      oldPhotos[i].remove();
+    }
+  };
+
+  var addNewPhotos = function (newPhotos, newPhoto, container) {
+    for (var i = 0; i < newPhotos.length; i++) {
+      newPhoto.src = newPhotos[i];
+      var cloneImage = newPhoto.cloneNode(true);
+      container.appendChild(cloneImage);
+    }
+  };
+
   var markCardPhotos = function (userPhotos) {
     var photosContainer = apartmentCard.querySelector('.popup__photos');
-    var photos = photosContainer.querySelector('.popup__photo');
+    var photo = photosContainer.querySelector('.popup__photo');
     var lastPhotos = apartmentCard.querySelectorAll('.popup__photo');
 
     if (userPhotos.length === 0) {
@@ -45,24 +51,18 @@
     } else {
       photosContainer.classList.remove('hidden');
 
-      for (var j = 0; j < lastPhotos.length; j++) {
-        lastPhotos[j].remove();
-      }
-
-      for (var i = 0; i < userPhotos.length; i++) {
-        photos.src = userPhotos[i];
-        var cloneImage = photos.cloneNode(true);
-        photosContainer.appendChild(cloneImage);
-      }
+      clearOldPhotos(lastPhotos);
+      addNewPhotos(userPhotos, photo, photosContainer);
     }
   };
 
   var markCardText = function (offer, author) {
     var offerType = offer.type.toUpperCase();
 
+    renderCardValue('.popup__text--address', offer.address);
     renderCardValue('.popup__title', offer.title);
     renderCardValue('.popup__text--price', offer.price + '₽/ночь');
-    renderCardValue('.popup__type', apartments[offerType].name);
+    renderCardValue('.popup__type', apartments[offerType]);
     renderCardValue('.popup__text--capacity', offer.rooms + ' комнаты для ' + offer.guests);
     renderCardValue('.popup__text--time', 'Заезд после ' + offer.checkin + ', выезд до ' + offer.checkout);
     renderCardValue('.popup__description', offer.description);
