@@ -5,6 +5,13 @@
   var card = popupTemplate.querySelector('.popup');
   var apartmentCard = card.cloneNode(true);
 
+  var apartments = {
+    BUNGALO: 'Бунгало',
+    FLAT: 'Квартира',
+    HOUSE: 'Дом',
+    PALACE: 'Дворец',
+  };
+
   var renderCardValue = function (popupValue, cardValue) {
     apartmentCard.querySelector(popupValue).textContent = cardValue;
   };
@@ -20,28 +27,40 @@
     }
   };
 
-  var markCardPhotos = function (userPhotos) {
-    var photosContainer = apartmentCard.querySelector('.popup__photos');
-    var photos = photosContainer.querySelector('.popup__photo');
+  var clearOldPhotos = function () {
     var lastPhotos = apartmentCard.querySelectorAll('.popup__photo');
 
-    for (var j = 0; j < lastPhotos.length; j++) {
-      lastPhotos[j].remove();
+    for (var i = 0; i < lastPhotos.length; i++) {
+      lastPhotos[i].remove();
     }
+  };
 
-    for (var i = 0; i < userPhotos.length; i++) {
-      photos.src = userPhotos[i];
-      var cloneImage = photos.cloneNode(true);
-      photosContainer.appendChild(cloneImage);
+  var markCardPhotos = function (userPhotos) {
+    var photosContainer = apartmentCard.querySelector('.popup__photos');
+    var photo = photosContainer.querySelector('.popup__photo');
+
+    if (userPhotos.length === 0) {
+      photosContainer.classList.add('hidden');
+    } else {
+      photosContainer.classList.remove('hidden');
+
+      clearOldPhotos();
+
+      for (var i = 0; i < userPhotos.length; i++) {
+        photo.src = userPhotos[i];
+        var cloneImage = photo.cloneNode(true);
+        photosContainer.appendChild(cloneImage);
+      }
     }
   };
 
   var markCardText = function (offer, author) {
     var offerType = offer.type.toUpperCase();
 
+    renderCardValue('.popup__text--address', offer.address);
     renderCardValue('.popup__title', offer.title);
     renderCardValue('.popup__text--price', offer.price + '₽/ночь');
-    renderCardValue('.popup__type', window.data.apartments[offerType].name);
+    renderCardValue('.popup__type', apartments[offerType]);
     renderCardValue('.popup__text--capacity', offer.rooms + ' комнаты для ' + offer.guests);
     renderCardValue('.popup__text--time', 'Заезд после ' + offer.checkin + ', выезд до ' + offer.checkout);
     renderCardValue('.popup__description', offer.description);
@@ -50,8 +69,8 @@
 
   var renderCard = function (data) {
     markCardFeatures(data.offer.features);
-    markCardPhotos(data.offer.photos);
     markCardText(data.offer, data.author);
+    markCardPhotos(data.offer.photos);
 
     return apartmentCard;
   };

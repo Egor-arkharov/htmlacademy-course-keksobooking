@@ -20,7 +20,7 @@
 
   var activatePage = function () {
     if (map.classList.contains('map--faded')) {
-      window.pin.renderPins();
+      window.backendLoad(window.pin.successHandler, window.pin.errorHandler);
     }
 
     map.classList.remove('map--faded');
