@@ -19,13 +19,13 @@
   };
 
   var showPins = function () {
-    var buttonsContainer = map.querySelector('.map__pins')
+    var buttonsContainer = map.querySelector('.map__pins');
     var buttons = buttonsContainer.querySelectorAll('.map__pin');
 
     for (var i = 0; i < buttons.length; i++) {
       buttons[i].classList.remove('hidden');
     }
-  }
+  };
 
   var activatePage = function () {
     if (map.classList.contains('map--faded')) {

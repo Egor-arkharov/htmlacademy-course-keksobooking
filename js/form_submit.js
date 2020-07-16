@@ -13,7 +13,7 @@
   var MAIN_BUTTON = 0;
 
   var hidePins = function () {
-    var buttonsContainer = map.querySelector('.map__pins')
+    var buttonsContainer = map.querySelector('.map__pins');
     var buttons = buttonsContainer.querySelectorAll('.map__pin');
 
     for (var i = 0; i < buttons.length; i++) {
@@ -21,7 +21,7 @@
     }
 
     mapPin.classList.remove('hidden');
-  }
+  };
 
   var disablePage = function () {
     var popup = map.querySelector('.popup');
@@ -30,7 +30,7 @@
     hidePins();
 
     map.classList.add('map--faded');
-    mapPin.setAttribute('style', "left: 570px; top: 375px;");
+    mapPin.setAttribute('style', 'left: 570px; top: 375px;');
 
     if (popup) {
       popup.remove();
@@ -38,7 +38,7 @@
 
     form.classList.add('ad-form--disabled');
     form.reset();
-  }
+  };
 
   var onPopupEscPress = function (evt) {
     var errorPopup = document.querySelector('.error');
@@ -61,18 +61,18 @@
     var popupTemplate = document.querySelector('#error').content;
 
     document.body.appendChild(popupTemplate);
-  }
+  };
 
   var showSuccessPopup = function () {
     var popupTemplate = document.querySelector('#success').content;
 
     document.body.appendChild(popupTemplate);
-  }
+  };
 
   var hideSuccessPopup = function () {
     document.addEventListener('keydown', onPopupEscPress);
     document.addEventListener('mousedown', onPopupEscPress);
-  }
+  };
 
   var hideErrorPopup = function () {
     document.addEventListener('keydown', onPopupEscPress);
@@ -81,13 +81,13 @@
     var errorButton = document.querySelector('.error__button');
 
     errorButton.removeEventListener('click', onPopupEscPress);
-  }
+  };
 
   var successHandler = function () {
     disablePage();
     showSuccessPopup();
     hideSuccessPopup();
-  }
+  };
 
   var errorHandler = function () {
     disablePage();
