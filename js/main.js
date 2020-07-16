@@ -5,12 +5,15 @@
   var fieldsets = form.querySelectorAll('fieldset');
 
 
-  var disablePage = function () {
+  var disableForm = function () {
     fieldsets.forEach(function (fieldset) {
       fieldset.disabled = true;
     });
   };
 
-  disablePage();
+  disableForm();
 
+  window.main = {
+    disableForm: disableForm
+  }
 })();

@@ -18,6 +18,15 @@
     ESCAPE: 'Escape'
   };
 
+  var showPins = function () {
+    var buttonsContainer = map.querySelector('.map__pins')
+    var buttons = buttonsContainer.querySelectorAll('.map__pin');
+
+    for (var i = 0; i < buttons.length; i++) {
+      buttons[i].classList.remove('hidden');
+    }
+  }
+
   var activatePage = function () {
     if (map.classList.contains('map--faded')) {
       window.backendLoad(window.pin.successHandler, window.pin.errorHandler);
@@ -29,6 +38,8 @@
     fieldsets.forEach(function (fieldset) {
       fieldset.disabled = false;
     });
+
+    showPins();
 
     address.value = (mapPin.offsetLeft + window.utile.pinSizeY + window.utile.pinPointSizeY) + ', ' + (mapPin.offsetTop + window.utile.pinHalfSize);
   };
