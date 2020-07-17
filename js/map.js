@@ -41,6 +41,9 @@
 
     showPins();
 
+    document.removeEventListener('mousedown', window.form_submit.onPopupEscPress);
+    document.removeEventListener('mousedown', window.form_submit.onPopupEscPress);
+
     address.value = (mapPin.offsetLeft + window.utile.pinSizeY + window.utile.pinPointSizeY) + ', ' + (mapPin.offsetTop + window.utile.pinHalfSize);
   };
 

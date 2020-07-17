@@ -80,7 +80,7 @@
 
     var errorButton = document.querySelector('.error__button');
 
-    errorButton.removeEventListener('click', onPopupEscPress);
+    errorButton.addEventListener('click', onPopupEscPress);
   };
 
   var successHandler = function () {
@@ -102,4 +102,7 @@
 
   form.addEventListener('submit', submitHandler);
 
+  window.form_submit = {
+    onPopupEscPress: onPopupEscPress
+  };
 })();
