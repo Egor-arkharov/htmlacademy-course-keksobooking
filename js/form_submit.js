@@ -40,7 +40,7 @@
     form.reset();
   };
 
-  var onPopupEscPress = function (evt) {
+  var onPopupHide = function (evt) {
     var errorPopup = document.querySelector('.error');
     var successPopup = document.querySelector('.success');
 
@@ -48,39 +48,49 @@
       evt.preventDefault();
 
       if (errorPopup) {
-        errorPopup.remove();
+        errorPopup.classList.add('hidden');
       }
 
       if (successPopup) {
-        successPopup.remove();
+        successPopup.classList.add('hidden');
       }
     }
   };
 
   var showErrorPopup = function () {
     var popupTemplate = document.querySelector('#error').content;
+    var errorPopup = document.querySelector('.error');
 
-    document.body.appendChild(popupTemplate);
+    if (errorPopup) {
+      errorPopup.classList.remove('hidden');
+    } else {
+      document.body.appendChild(popupTemplate);
+    }
   };
 
   var showSuccessPopup = function () {
     var popupTemplate = document.querySelector('#success').content;
+    var successPopup = document.querySelector('.success');
 
-    document.body.appendChild(popupTemplate);
+    if (successPopup) {
+      successPopup.classList.remove('hidden');
+    } else {
+      document.body.appendChild(popupTemplate);
+    }
   };
 
   var hideSuccessPopup = function () {
-    document.addEventListener('keydown', onPopupEscPress);
-    document.addEventListener('mousedown', onPopupEscPress);
+    document.addEventListener('keydown', onPopupHide);
+    document.addEventListener('mousedown', onPopupHide);
   };
 
   var hideErrorPopup = function () {
-    document.addEventListener('keydown', onPopupEscPress);
-    document.addEventListener('mousedown', onPopupEscPress);
+    document.addEventListener('keydown', onPopupHide);
+    document.addEventListener('mousedown', onPopupHide);
 
     var errorButton = document.querySelector('.error__button');
 
-    errorButton.addEventListener('click', onPopupEscPress);
+    errorButton.addEventListener('click', onPopupHide);
   };
 
   var successHandler = function () {
@@ -103,6 +113,6 @@
   form.addEventListener('submit', submitHandler);
 
   window.formSubmit = {
-    onPopupEscPress: onPopupEscPress
+    onPopupHide: onPopupHide
   };
 })();
