@@ -102,7 +102,7 @@
 
   form.addEventListener('submit', submitHandler);
 
-  window.form_submit = {
+  window.formSubmit = {
     onPopupEscPress: onPopupEscPress
   };
 })();
