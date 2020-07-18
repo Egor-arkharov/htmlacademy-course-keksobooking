@@ -4,6 +4,7 @@
   var form = document.querySelector('.ad-form');
   var map = document.querySelector('.map');
   var mapPin = map.querySelector('.map__pin');
+  var address = document.querySelector('#address');
 
   var EvtKeys = {
     ENTER: 'Enter',
@@ -38,34 +39,35 @@
 
     form.classList.add('ad-form--disabled');
     form.reset();
+
+    address.value = (mapPin.offsetLeft + window.utile.pinHalfSize) + ', ' + (mapPin.offsetTop + window.utile.pinHalfSize);
   };
 
   var onPopupHide = function (evt) {
-    var errorPopup = document.querySelector('.error');
     var successPopup = document.querySelector('.success');
+    var errorPopup = document.querySelector('.error');
 
     if (evt.key === EvtKeys.ESCAPE || evt.button === MAIN_BUTTON) {
       evt.preventDefault();
 
-      if (errorPopup) {
-        errorPopup.classList.add('hidden');
+      if (successPopup) {
+        successPopup.remove();
       }
 
-      if (successPopup) {
-        successPopup.classList.add('hidden');
+      if (errorPopup) {
+        errorPopup.remove();
       }
+
+      document.removeEventListener('keydown', onPopupHide);
+      document.removeEventListener('mousedown', onPopupHide);
     }
   };
 
   var showPopup = function (template, popupClass) {
     var popupTemplate = document.querySelector(template).content;
-    var popup = document.querySelector(popupClass);
+    var newpopup = popupTemplate.querySelector(popupClass).cloneNode(true);
 
-    if (popup) {
-      popup.classList.remove('hidden');
-    } else {
-      document.body.appendChild(popupTemplate);
-    }
+    document.body.appendChild(newpopup);
   };
 
   var hideSuccessPopup = function () {
@@ -89,7 +91,6 @@
   };
 
   var errorHandler = function () {
-    disablePage();
     showPopup('#error', '.error');
     hideErrorPopup();
   };
