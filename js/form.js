@@ -35,7 +35,9 @@
     }
   };
 
-  address.value = (mapPin.offsetLeft + window.utile.pinHalfSize) + ', ' + (mapPin.offsetTop + window.utile.pinHalfSize);
+  var putCenterAddress = function () {
+    address.value = (mapPin.offsetLeft + window.utile.pinHalfSize) + ', ' + (mapPin.offsetTop + window.utile.pinHalfSize);
+  };
 
   var validateCapacity = function () {
     var ROOM_NUM = +rooms.value;
@@ -63,10 +65,15 @@
     timein.value = timeout.value;
   };
 
+  putCenterAddress();
   rooms.addEventListener('change', validateCapacity);
   capacity.addEventListener('change', validateCapacity);
   userType.addEventListener('change', validatePrice);
   timein.addEventListener('change', validateTimeOut);
   timeout.addEventListener('change', validateTimeIn);
+
+  window.form = {
+    putCenterAddress: putCenterAddress
+  };
 
 })();

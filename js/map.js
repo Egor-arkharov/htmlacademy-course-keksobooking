@@ -28,10 +28,6 @@
   };
 
   var activatePage = function () {
-    if (map.classList.contains('map--faded')) {
-      window.backendLoad(window.pin.successHandler, window.pin.errorHandler);
-    }
-
     map.classList.remove('map--faded');
     form.classList.remove('ad-form--disabled');
 
