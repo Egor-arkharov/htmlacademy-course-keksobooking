@@ -14,6 +14,8 @@
   var filterContainter = document.querySelector('.map__filters-container');
   var housingFilter = filterContainter.querySelector('#housing-type');
 
+  var activePins = [];
+
   var renderPin = function (pin) {
     var newPin = pinTemplate.querySelector('.map__pin').cloneNode(true);
 
@@ -35,19 +37,22 @@
 
   var renderPins = function (pins) {
     var fragment = document.createDocumentFragment();
+    var takeNumber = pins.length > MAX_PINS ? MAX_PINS : pins.length;
 
-    var houseFilter = pins.filter(function (pin) {
-      return pin.offer.type === housingFilter.value;
-    });
-
-    for (var i = 0; i < houseFilter.length; i++) {
-      if (i < MAX_PINS) {
-        var adPin = renderPin(houseFilter[i]);
+    for (var i = 0; i < takeNumber; i++) {
+        var adPin = renderPin(pins[i]);
         fragment.appendChild(adPin);
-      }
     }
 
     mapPins.appendChild(fragment);
+  };
+
+  var updatePins = function () {
+    var houseFilter = Object.values(activePins).filter(function (pin) {
+      return pin.offer.type === housingFilter.value;
+    });
+
+    renderPins(houseFilter);
   };
 
   var removePopup = function () {
@@ -81,7 +86,8 @@
     removePopup();
     removeLastPins();
 
-    window.debounce(renderPins(pins));
+    activePins = pins;
+    updatePins();
   };
 
   var errorHandler = function (errorMessage) {
@@ -99,11 +105,7 @@
     document.body.insertAdjacentElement('afterbegin', node);
   };
 
-  var filterHousingType = function () {
-    window.backendLoad(successHandler, errorHandler);
-  };
-
-  housingFilter.addEventListener('change', filterHousingType);
+  housingFilter.addEventListener('change', successHandler);
 
   window.pin = {
     successHandler: successHandler,
