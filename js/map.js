@@ -37,8 +37,6 @@
 
     showPins();
 
-    window.backendLoad(window.pin.successHandler, window.pin.errorHandler);
-
     address.value = (mapPin.offsetLeft + window.utile.pinSizeY + window.utile.pinPointSizeY) + ', ' + (mapPin.offsetTop + window.utile.pinHalfSize);
   };
 

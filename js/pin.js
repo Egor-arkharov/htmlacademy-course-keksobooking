@@ -107,6 +107,8 @@
 
   housingFilter.addEventListener('change', successHandler);
 
+  window.backendLoad(successHandler, errorHandler);
+
   window.pin = {
     successHandler: successHandler,
     errorHandler: errorHandler,
