@@ -9,6 +9,8 @@
   var mapPinMain = document.querySelector('.map__pin--main');
   var form = document.querySelector('.ad-form');
   var fieldsets = form.querySelectorAll('fieldset');
+  var formFilter = document.querySelector('.map__filters');
+  var errorMessage = document.querySelector('.error__message');
 
   var address = document.querySelector('#address');
   var buttonClose = window.card.apartmentCard.querySelector('.popup__close');
@@ -18,12 +20,11 @@
     ESCAPE: 'Escape'
   };
 
-  var showPins = function () {
-    var buttonsContainer = map.querySelector('.map__pins');
-    var buttons = buttonsContainer.querySelectorAll('.map__pin');
+  var activateFormFilter = function () {
+    var formFilters = formFilter.children;
 
-    for (var i = 0; i < buttons.length; i++) {
-      buttons[i].classList.remove('hidden');
+    for (var i = 0; i < formFilters.length; i++) {
+      formFilters[i].removeAttribute('disabled', 'disabled');
     }
   };
 
@@ -35,22 +36,28 @@
       fieldset.disabled = false;
     });
 
-    showPins();
+    activateFormFilter();
 
     address.value = (mapPin.offsetLeft + window.utile.pinSizeY + window.utile.pinPointSizeY) + ', ' + (mapPin.offsetTop + window.utile.pinHalfSize);
+
+    window.backendLoad(window.pin.successHandler, window.pin.errorHandler);
+
+    window.pin.updatePins();
   };
 
-  mapPinMain.addEventListener('mousedown', function (evt) {
-    if (evt.button === MAIN_BUTTON) {
+  var isPageActive = function (evt) {
+    if (evt.button === MAIN_BUTTON || evt.key === window.map.EvtKeys.ENTER) {
       activatePage();
     }
-  });
 
-  mapPinMain.addEventListener('keydown', function (evt) {
-    if (evt.key === window.map.EvtKeys.ENTER) {
-      activatePage();
+    if ((!map.classList.contains('map--faded')) && (!errorMessage)) {
+      mapPinMain.removeEventListener('mousedown', isPageActive);
+      mapPinMain.removeEventListener('keydown', isPageActive);
     }
-  });
+  };
+
+  mapPinMain.addEventListener('mousedown', isPageActive);
+  mapPinMain.addEventListener('keydown', isPageActive);
 
   var onPopupEscPress = function (evt) {
     if (evt.key === EvtKeys.ESCAPE) {
@@ -87,7 +94,8 @@
 
   window.map = {
     openPopup: openPopup,
-    EvtKeys: EvtKeys
+    EvtKeys: EvtKeys,
+    isPageActive: isPageActive
   };
 
 })();

@@ -14,6 +14,8 @@
   var filterContainter = document.querySelector('.map__filters-container');
   var housingFilter = filterContainter.querySelector('#housing-type');
 
+  var main = document.querySelector('main');
+
   var activePins = [];
 
   var renderPin = function (pin) {
@@ -40,19 +42,30 @@
     var takeNumber = pins.length > MAX_PINS ? MAX_PINS : pins.length;
 
     for (var i = 0; i < takeNumber; i++) {
-        var adPin = renderPin(pins[i]);
-        fragment.appendChild(adPin);
+      var adPin = renderPin(pins[i]);
+      fragment.appendChild(adPin);
     }
 
     mapPins.appendChild(fragment);
   };
 
   var updatePins = function () {
+    if (activePins.length !== 0) {
+      removeErrorMessage();
+    }
+
+    removePopup();
+    removeLastPins();
+
     var houseFilter = Object.values(activePins).filter(function (pin) {
-      return pin.offer.type === housingFilter.value;
+      if (housingFilter.value === 'any' && pin.offer) {
+        return pin;
+      } else {
+        return pin.offer.type === housingFilter.value;
+      }
     });
 
-    renderPins(houseFilter);
+    window.debounce(renderPins(houseFilter));
   };
 
   var removePopup = function () {
@@ -82,12 +95,7 @@
   };
 
   var successHandler = function (pins) {
-    removeErrorMessage();
-    removePopup();
-    removeLastPins();
-
     activePins = pins;
-    updatePins();
   };
 
   var errorHandler = function (errorMessage) {
@@ -102,19 +110,19 @@
     node.classList.add('error__message');
 
     node.textContent = errorMessage;
-    document.body.insertAdjacentElement('afterbegin', node);
+    main.insertAdjacentElement('afterbegin', node);
   };
 
-  housingFilter.addEventListener('change', successHandler);
-
-  window.backendLoad(successHandler, errorHandler);
+  housingFilter.addEventListener('change', updatePins);
 
   window.pin = {
     successHandler: successHandler,
     errorHandler: errorHandler,
     removePopup: removePopup,
     removeLastPins: removeLastPins,
-    formFilter: formFilter
+    formFilter: formFilter,
+    updatePins: updatePins,
+    renderPins: renderPins
   };
 
 })();

@@ -5,7 +5,7 @@
   var card = popupTemplate.querySelector('.popup');
   var apartmentCard = card.cloneNode(true);
 
-  var apartments = {
+  var apartmentType = {
     BUNGALO: 'Бунгало',
     FLAT: 'Квартира',
     HOUSE: 'Дом',
@@ -60,7 +60,7 @@
     renderCardValue('.popup__text--address', offer.address);
     renderCardValue('.popup__title', offer.title);
     renderCardValue('.popup__text--price', offer.price + '₽/ночь');
-    renderCardValue('.popup__type', apartments[offerType]);
+    renderCardValue('.popup__type', apartmentType[offerType]);
     renderCardValue('.popup__text--capacity', offer.rooms + ' комнаты для ' + offer.guests);
     renderCardValue('.popup__text--time', 'Заезд после ' + offer.checkin + ', выезд до ' + offer.checkout);
     renderCardValue('.popup__description', offer.description);

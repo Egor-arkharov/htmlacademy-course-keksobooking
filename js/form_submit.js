@@ -6,6 +6,7 @@
   var form = document.querySelector('.ad-form');
   var map = document.querySelector('.map');
   var mapPin = map.querySelector('.map__pin');
+  var mapPinMain = document.querySelector('.map__pin--main');
   var resetButton = form.querySelector('.ad-form__reset');
 
   var EvtKeys = {
@@ -24,7 +25,11 @@
     form.classList.add('ad-form--disabled');
     form.reset();
     window.form.putCenterAddress();
+    window.main.disableFormFilter();
     window.pin.formFilter.reset();
+
+    mapPinMain.addEventListener('mousedown', window.map.isPageActive);
+    mapPinMain.addEventListener('keydown', window.map.isPageActive);
   };
 
   var onPopupHide = function (evt) {

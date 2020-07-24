@@ -40,9 +40,9 @@
   };
 
   var validateCapacity = function () {
-    var ROOM_NUM = +rooms.value;
-    var GUEST_NUM = +capacity.value;
-    var isValidChoice = ROOM_NUM === 100 ? (GUEST_NUM === 0) : (ROOM_NUM > GUEST_NUM && GUEST_NUM !== 0 || ROOM_NUM === GUEST_NUM);
+    var roomNum = +rooms.value;
+    var guestNum = +capacity.value;
+    var isValidChoice = roomNum === 100 ? (guestNum === 0) : (roomNum > guestNum && guestNum !== 0 || roomNum === guestNum);
 
     if (isValidChoice) {
       capacity.setCustomValidity('');
