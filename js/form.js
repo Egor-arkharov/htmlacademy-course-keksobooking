@@ -73,7 +73,8 @@
   timeout.addEventListener('change', validateTimeIn);
 
   window.form = {
-    putCenterAddress: putCenterAddress
+    putCenterAddress: putCenterAddress,
+    apartments: apartments
   };
 
 })();

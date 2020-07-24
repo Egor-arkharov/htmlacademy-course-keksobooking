@@ -60,9 +60,9 @@
     var houseFilter = Object.values(activePins).filter(function (pin) {
       if (housingFilter.value === 'any' && pin.offer) {
         return pin;
-      } else {
-        return pin.offer.type === housingFilter.value;
       }
+
+      return pin.offer.type === housingFilter.value;
     });
 
     window.debounce(renderPins(houseFilter));
@@ -94,8 +94,18 @@
     }
   };
 
+  var activateFormFilter = function () {
+    var formFilters = formFilter.children;
+
+    for (var i = 0; i < formFilters.length; i++) {
+      formFilters[i].removeAttribute('disabled', 'disabled');
+    }
+  };
+
   var successHandler = function (pins) {
     activePins = pins;
+    activateFormFilter();
+    updatePins();
   };
 
   var errorHandler = function (errorMessage) {
@@ -122,7 +132,8 @@
     removeLastPins: removeLastPins,
     formFilter: formFilter,
     updatePins: updatePins,
-    renderPins: renderPins
+    renderPins: renderPins,
+    activePins: activePins
   };
 
 })();

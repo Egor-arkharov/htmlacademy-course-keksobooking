@@ -28,8 +28,8 @@
     window.main.disableFormFilter();
     window.pin.formFilter.reset();
 
-    mapPinMain.addEventListener('mousedown', window.map.isPageActive);
-    mapPinMain.addEventListener('keydown', window.map.isPageActive);
+    mapPinMain.addEventListener('mousedown', window.map.checkActivePage);
+    mapPinMain.addEventListener('keydown', window.map.checkActivePage);
   };
 
   var onPopupHide = function (evt) {
@@ -89,7 +89,6 @@
   };
 
   form.addEventListener('submit', submitHandler);
-
   resetButton.addEventListener('click', disablePage);
 
   window.formSubmit = {
