@@ -5,13 +5,6 @@
   var card = popupTemplate.querySelector('.popup');
   var apartmentCard = card.cloneNode(true);
 
-  var apartments = {
-    BUNGALO: 'Бунгало',
-    FLAT: 'Квартира',
-    HOUSE: 'Дом',
-    PALACE: 'Дворец',
-  };
-
   var renderCardValue = function (popupValue, cardValue) {
     apartmentCard.querySelector(popupValue).textContent = cardValue;
   };
@@ -60,7 +53,7 @@
     renderCardValue('.popup__text--address', offer.address);
     renderCardValue('.popup__title', offer.title);
     renderCardValue('.popup__text--price', offer.price + '₽/ночь');
-    renderCardValue('.popup__type', apartments[offerType]);
+    renderCardValue('.popup__type', window.form.apartments[offerType].name);
     renderCardValue('.popup__text--capacity', offer.rooms + ' комнаты для ' + offer.guests);
     renderCardValue('.popup__text--time', 'Заезд после ' + offer.checkin + ', выезд до ' + offer.checkout);
     renderCardValue('.popup__description', offer.description);

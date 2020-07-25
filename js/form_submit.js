@@ -1,46 +1,35 @@
 'use strict';
 
 (function () {
+  var MAIN_BUTTON = 0;
+
   var form = document.querySelector('.ad-form');
   var map = document.querySelector('.map');
   var mapPin = map.querySelector('.map__pin');
-  var address = document.querySelector('#address');
+  var mapPinMain = document.querySelector('.map__pin--main');
+  var resetButton = form.querySelector('.ad-form__reset');
 
   var EvtKeys = {
     ENTER: 'Enter',
     ESCAPE: 'Escape'
   };
 
-  var MAIN_BUTTON = 0;
-
-  var hidePins = function () {
-    var buttonsContainer = map.querySelector('.map__pins');
-    var buttons = buttonsContainer.querySelectorAll('.map__pin');
-
-    for (var i = 0; i < buttons.length; i++) {
-      buttons[i].classList.add('hidden');
-    }
-
-    mapPin.classList.remove('hidden');
-  };
-
   var disablePage = function () {
-    var popup = map.querySelector('.popup');
-
-    window.main.disableForm();
-    hidePins();
-
     map.classList.add('map--faded');
     mapPin.setAttribute('style', 'left: 570px; top: 375px;');
 
-    if (popup) {
-      popup.remove();
-    }
+    window.main.disableForm();
+    window.pin.removeLastPins();
+    window.pin.removePopup();
 
     form.classList.add('ad-form--disabled');
     form.reset();
+    window.form.putCenterAddress();
+    window.main.disableFormFilter();
+    window.pin.formFilter.reset();
 
-    address.value = (mapPin.offsetLeft + window.utile.pinHalfSize) + ', ' + (mapPin.offsetTop + window.utile.pinHalfSize);
+    mapPinMain.addEventListener('mousedown', window.map.checkActivePage);
+    mapPinMain.addEventListener('keydown', window.map.checkActivePage);
   };
 
   var onPopupHide = function (evt) {
@@ -63,11 +52,10 @@
     }
   };
 
-  var showPopup = function (template, popupClass) {
-    var popupTemplate = document.querySelector(template).content;
-    var newpopup = popupTemplate.querySelector(popupClass).cloneNode(true);
+  var showPopup = function (template) {
+    var popupTemplate = document.querySelector(template).content.cloneNode(true);
 
-    document.body.appendChild(newpopup);
+    document.body.appendChild(popupTemplate);
   };
 
   var hideSuccessPopup = function () {
@@ -101,6 +89,7 @@
   };
 
   form.addEventListener('submit', submitHandler);
+  resetButton.addEventListener('click', disablePage);
 
   window.formSubmit = {
     onPopupHide: onPopupHide

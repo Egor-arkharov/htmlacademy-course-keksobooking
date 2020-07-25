@@ -5,10 +5,12 @@
 
   var map = document.querySelector('.map');
   var mapPin = document.querySelector('.map__pin');
+  var mapPins = document.querySelector('.map__pins');
   var filtersContainer = document.querySelector('.map__filters-container');
   var mapPinMain = document.querySelector('.map__pin--main');
   var form = document.querySelector('.ad-form');
   var fieldsets = form.querySelectorAll('fieldset');
+  var errorMessage = document.querySelector('.error__message');
 
   var address = document.querySelector('#address');
   var buttonClose = window.card.apartmentCard.querySelector('.popup__close');
@@ -18,20 +20,7 @@
     ESCAPE: 'Escape'
   };
 
-  var showPins = function () {
-    var buttonsContainer = map.querySelector('.map__pins');
-    var buttons = buttonsContainer.querySelectorAll('.map__pin');
-
-    for (var i = 0; i < buttons.length; i++) {
-      buttons[i].classList.remove('hidden');
-    }
-  };
-
   var activatePage = function () {
-    if (map.classList.contains('map--faded')) {
-      window.backendLoad(window.pin.successHandler, window.pin.errorHandler);
-    }
-
     map.classList.remove('map--faded');
     form.classList.remove('ad-form--disabled');
 
@@ -39,22 +28,24 @@
       fieldset.disabled = false;
     });
 
-    showPins();
-
     address.value = (mapPin.offsetLeft + window.utile.pinSizeY + window.utile.pinPointSizeY) + ', ' + (mapPin.offsetTop + window.utile.pinHalfSize);
+
+    window.backendLoad(window.pin.successHandler, window.pin.errorHandler);
   };
 
-  mapPinMain.addEventListener('mousedown', function (evt) {
-    if (evt.button === MAIN_BUTTON) {
+  var checkActivePage = function (evt) {
+    if (evt.button === MAIN_BUTTON || evt.key === window.map.EvtKeys.ENTER) {
       activatePage();
     }
-  });
 
-  mapPinMain.addEventListener('keydown', function (evt) {
-    if (evt.key === window.map.EvtKeys.ENTER) {
-      activatePage();
+    if (mapPins.children.length > 2 && !errorMessage) {
+      mapPinMain.removeEventListener('mousedown', checkActivePage);
+      mapPinMain.removeEventListener('keydown', checkActivePage);
     }
-  });
+  };
+
+  mapPinMain.addEventListener('mousedown', checkActivePage);
+  mapPinMain.addEventListener('keydown', checkActivePage);
 
   var onPopupEscPress = function (evt) {
     if (evt.key === EvtKeys.ESCAPE) {
@@ -91,7 +82,8 @@
 
   window.map = {
     openPopup: openPopup,
-    EvtKeys: EvtKeys
+    EvtKeys: EvtKeys,
+    checkActivePage: checkActivePage
   };
 
 })();

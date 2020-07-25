@@ -3,8 +3,8 @@
 (function () {
 
   var URL = {
-    URL_LOAD: 'https://javascript.pages.academy/keksobooking/data',
-    URL_SAVE: 'https://javascript.pages.academy/keksobooking'
+    LOAD: 'https://javascript.pages.academy/keksobooking/data',
+    SAVE: 'https://javascript.pages.academy/keksobooking'
   };
 
   var StatusCode = {
@@ -28,7 +28,7 @@
       onError('Произошла ошибка соединения');
     });
 
-    xhr.open('GET', URL.URL_LOAD);
+    xhr.open('GET', URL.LOAD);
     xhr.send();
 
     return xhr.response;
@@ -50,7 +50,7 @@
       onError('Произошла ошибка соединения');
     });
 
-    xhr.open('POST', URL.URL_SAVE);
+    xhr.open('POST', URL.SAVE);
     xhr.send(data);
   };
 
