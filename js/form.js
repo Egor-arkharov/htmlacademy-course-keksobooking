@@ -6,13 +6,13 @@
   var capacity = form.querySelector('#capacity');
   var userType = form.querySelector('#type');
   var userPrice = form.querySelector('#price');
-  var timein = form.querySelector('#timein');
-  var timeout = form.querySelector('#timeout');
+  var timeIn = form.querySelector('#timein');
+  var timeOut = form.querySelector('#timeout');
 
   var mapPin = document.querySelector('.map__pin');
   var address = document.querySelector('#address');
 
-  var apartments = {
+  var Apartments = {
     BUNGALO: {
       type: 'BUNGALO',
       name: 'Бунгало',
@@ -44,37 +44,37 @@
     var guestNum = +capacity.value;
     var isValidChoice = roomNum === 100 ? (guestNum === 0) : (roomNum > guestNum && guestNum !== 0 || roomNum === guestNum);
 
+    capacity.setCustomValidity('Количество гостей не соответствует количеству комнат');
+
     if (isValidChoice) {
       capacity.setCustomValidity('');
-    } else {
-      capacity.setCustomValidity('Количество гостей не соответствует количеству комнат');
     }
   };
 
   var validatePrice = function (e) {
     var value = e.target.value.toUpperCase();
-    userPrice.setAttribute('min', apartments[value].price);
-    userPrice.setAttribute('placeholder', apartments[value].price);
+    userPrice.setAttribute('min', Apartments[value].price);
+    userPrice.setAttribute('placeholder', Apartments[value].price);
   };
 
   var validateTimeOut = function () {
-    timeout.value = timein.value;
+    timeOut.value = timeIn.value;
   };
 
   var validateTimeIn = function () {
-    timein.value = timeout.value;
+    timeIn.value = timeOut.value;
   };
 
   putCenterAddress();
   rooms.addEventListener('change', validateCapacity);
   capacity.addEventListener('change', validateCapacity);
   userType.addEventListener('change', validatePrice);
-  timein.addEventListener('change', validateTimeOut);
-  timeout.addEventListener('change', validateTimeIn);
+  timeIn.addEventListener('change', validateTimeOut);
+  timeOut.addEventListener('change', validateTimeIn);
 
   window.form = {
     putCenterAddress: putCenterAddress,
-    apartments: apartments
+    Apartments: Apartments
   };
 
 })();

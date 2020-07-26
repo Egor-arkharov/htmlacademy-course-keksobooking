@@ -4,10 +4,13 @@
   var MAIN_BUTTON = 0;
 
   var form = document.querySelector('.ad-form');
+  var formPrice = form.querySelector('#price');
   var map = document.querySelector('.map');
   var mapPin = map.querySelector('.map__pin');
   var mapPinMain = document.querySelector('.map__pin--main');
   var resetButton = form.querySelector('.ad-form__reset');
+
+  var main = document.querySelector('main');
 
   var EvtKeys = {
     ENTER: 'Enter',
@@ -28,8 +31,10 @@
     window.main.disableFormFilter();
     window.pin.formFilter.reset();
 
-    mapPinMain.addEventListener('mousedown', window.map.checkActivePage);
-    mapPinMain.addEventListener('keydown', window.map.checkActivePage);
+    formPrice.setAttribute('placeholder', 0);
+
+    mapPinMain.addEventListener('mousedown', window.map.onMouseCheckPage);
+    mapPinMain.addEventListener('keydown', window.map.onKeyCheckPage);
   };
 
   var onPopupHide = function (evt) {
@@ -55,7 +60,7 @@
   var showPopup = function (template) {
     var popupTemplate = document.querySelector(template).content.cloneNode(true);
 
-    document.body.appendChild(popupTemplate);
+    main.appendChild(popupTemplate);
   };
 
   var hideSuccessPopup = function () {
@@ -72,23 +77,23 @@
     errorButton.addEventListener('click', onPopupHide);
   };
 
-  var successHandler = function () {
+  var onSuccess = function () {
     disablePage();
     showPopup('#success', '.success');
     hideSuccessPopup();
   };
 
-  var errorHandler = function () {
+  var onError = function () {
     showPopup('#error', '.error');
     hideErrorPopup();
   };
 
-  var submitHandler = function (evt) {
-    window.backendSave(new FormData(form), successHandler, errorHandler);
+  var onSubmitSaveData = function (evt) {
+    window.backendSave(new FormData(form), onSuccess, onError);
     evt.preventDefault();
   };
 
-  form.addEventListener('submit', submitHandler);
+  form.addEventListener('submit', onSubmitSaveData);
   resetButton.addEventListener('click', disablePage);
 
   window.formSubmit = {

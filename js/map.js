@@ -33,19 +33,28 @@
     window.backendLoad(window.pin.successHandler, window.pin.errorHandler);
   };
 
-  var checkActivePage = function (evt) {
-    if (evt.button === MAIN_BUTTON || evt.key === window.map.EvtKeys.ENTER) {
+  var onMouseCheckPage = function (evt) {
+    if (evt.button === MAIN_BUTTON && mapPins.children.length <= 2) {
       activatePage();
     }
 
     if (mapPins.children.length > 2 && !errorMessage) {
-      mapPinMain.removeEventListener('mousedown', checkActivePage);
-      mapPinMain.removeEventListener('keydown', checkActivePage);
+      mapPinMain.removeEventListener('mousedown', onMouseCheckPage);
     }
   };
 
-  mapPinMain.addEventListener('mousedown', checkActivePage);
-  mapPinMain.addEventListener('keydown', checkActivePage);
+  var onKeyCheckPage = function (evt) {
+    if (evt.key === window.map.EvtKeys.ENTER && mapPins.children.length <= 2) {
+      activatePage();
+    }
+
+    if (mapPins.children.length > 2 && !errorMessage) {
+      mapPinMain.removeEventListener('keydown', onKeyCheckPage);
+    }
+  };
+
+  mapPinMain.addEventListener('mousedown', onMouseCheckPage);
+  mapPinMain.addEventListener('keydown', onKeyCheckPage);
 
   var onPopupEscPress = function (evt) {
     if (evt.key === EvtKeys.ESCAPE) {
@@ -65,7 +74,8 @@
   };
 
   mapPin.addEventListener('keydown', function (evt) {
-    if (evt.key === EvtKeys.ENTER) {
+    if (evt.key === EvtKeys.ENTER && !mapPin.classList.contains('map__pin--main')) {
+      mapPin.classList.add('map__pin--active');
       openPopup();
     }
   });
@@ -83,7 +93,8 @@
   window.map = {
     openPopup: openPopup,
     EvtKeys: EvtKeys,
-    checkActivePage: checkActivePage
+    onMouseCheckPage: onMouseCheckPage,
+    onKeyCheckPage: onKeyCheckPage
   };
 
 })();
