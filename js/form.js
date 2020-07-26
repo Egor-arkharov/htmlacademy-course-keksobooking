@@ -39,15 +39,21 @@
     address.value = (mapPin.offsetLeft + window.utile.pinHalfSize) + ', ' + (mapPin.offsetTop + window.utile.pinHalfSize);
   };
 
+  var putSelectedTypePlaceholder = function () {
+    var selectedType = userType.options[userType.selectedIndex].value;
+
+    userPrice.setAttribute('placeholder', Apartments[selectedType.toUpperCase()].price);
+  };
+
   var validateCapacity = function () {
     var roomNum = +rooms.value;
     var guestNum = +capacity.value;
     var isValidChoice = roomNum === 100 ? (guestNum === 0) : (roomNum > guestNum && guestNum !== 0 || roomNum === guestNum);
 
-    capacity.setCustomValidity('Количество гостей не соответствует количеству комнат');
-
     if (isValidChoice) {
       capacity.setCustomValidity('');
+    } else {
+      capacity.setCustomValidity('Количество гостей не соответствует количеству комнат');
     }
   };
 
@@ -74,7 +80,8 @@
 
   window.form = {
     putCenterAddress: putCenterAddress,
-    Apartments: Apartments
+    Apartments: Apartments,
+    putSelectedTypePlaceholder: putSelectedTypePlaceholder
   };
 
 })();

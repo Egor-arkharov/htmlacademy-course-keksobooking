@@ -44,7 +44,7 @@
   };
 
   var onKeyCheckPage = function (evt) {
-    if (evt.key === window.map.EvtKeys.ENTER && mapPins.children.length <= 2) {
+    if (evt.key === EvtKeys.ENTER && mapPins.children.length <= 2) {
       activatePage();
     }
 

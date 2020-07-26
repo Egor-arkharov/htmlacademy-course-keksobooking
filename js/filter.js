@@ -1,7 +1,7 @@
 'use strict';
 
 (function () {
-  var priceFilter = document.querySelector('#housing-price');
+  var filterPrice = document.querySelector('#housing-price');
 
   var Price = {
     MIN: 10000,
@@ -9,29 +9,41 @@
   };
 
   var updateByType = function (data, value, type) {
-    return data.filter(function (pin) {
+    var typeFilter = data.filter(function (pin) {
       return pin.offer[type].toString() === value;
     });
+
+    return typeFilter;
   };
 
   var updateByPrice = function (data, type) {
-    return data.filter(function (pin) {
+    var priceFilter = data.filter(function (pin) {
       var price = pin.offer[type];
-      if (priceFilter.value === 'low') {
+
+      if (filterPrice.value === 'low') {
         return price <= Price.MIN;
-      } else if (priceFilter.value === 'middle') {
+      }
+
+      if (filterPrice.value === 'middle') {
         return price >= Price.MIN && price <= Price.MAX;
-      } else if (priceFilter.value === 'high') {
+      }
+
+      if (filterPrice.value === 'high') {
         return price >= Price.MAX;
       }
+
       return pin;
     });
+
+    return priceFilter;
   };
 
   var updateByFeatures = function (data, value) {
-    return data.filter(function (pin) {
+    var featureFilter = data.filter(function (pin) {
       return pin.offer.features.includes(value);
     });
+
+    return featureFilter;
   };
 
   var updateOffers = function (data) {
