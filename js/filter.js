@@ -23,12 +23,6 @@
     }
 
     return typeFilterAds;
-
-    // var typeFilter = data.filter(function (pin) {
-    //   return pin.offer[type].toString() === value;
-    // });
-
-    // return typeFilter;
   };
 
   var updateByPrice = function (data, type) {
