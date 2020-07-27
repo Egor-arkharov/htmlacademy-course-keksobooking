@@ -28,7 +28,7 @@
       fieldset.disabled = false;
     });
 
-    address.value = (mapPin.offsetLeft + window.utile.pinSizeY + window.utile.pinPointSizeY) + ', ' + (mapPin.offsetTop + window.utile.pinHalfSize);
+    address.value = (mapPin.offsetLeft + window.utile.pinSizeY + window.utile.pinMainPointSizeY) + ', ' + (mapPin.offsetTop + window.utile.pinHalfSize);
 
     window.backendLoad(window.pin.successHandler, window.pin.errorHandler);
   };
@@ -56,8 +56,17 @@
   mapPinMain.addEventListener('mousedown', onMouseCheckPage);
   mapPinMain.addEventListener('keydown', onKeyCheckPage);
 
+  var hideActivePin = function () {
+    var mapPinsActive = mapPins.querySelectorAll('.map__pin--active');
+
+    for (var i = 0; i < mapPinsActive.length; i++) {
+      mapPinsActive[i].classList.remove('map__pin--active');
+    }
+  };
+
   var onPopupEscPress = function (evt) {
     if (evt.key === EvtKeys.ESCAPE) {
+      hideActivePin();
       evt.preventDefault();
       closePopup();
     }
@@ -75,17 +84,18 @@
 
   mapPin.addEventListener('keydown', function (evt) {
     if (evt.key === EvtKeys.ENTER && !mapPin.classList.contains('map__pin--main')) {
-      mapPin.classList.add('map__pin--active');
       openPopup();
     }
   });
 
   buttonClose.addEventListener('click', function () {
+    hideActivePin();
     closePopup();
   });
 
   buttonClose.addEventListener('keydown', function (evt) {
     if (evt.key === EvtKeys.ENTER) {
+      hideActivePin();
       closePopup();
     }
   });
@@ -94,7 +104,8 @@
     openPopup: openPopup,
     EvtKeys: EvtKeys,
     onMouseCheckPage: onMouseCheckPage,
-    onKeyCheckPage: onKeyCheckPage
+    onKeyCheckPage: onKeyCheckPage,
+    hideActivePin: hideActivePin
   };
 
 })();

@@ -39,10 +39,11 @@
     address.value = (mapPin.offsetLeft + window.utile.pinHalfSize) + ', ' + (mapPin.offsetTop + window.utile.pinHalfSize);
   };
 
-  var putSelectedTypePlaceholder = function () {
+  var putSelectedTypePrice = function () {
     var selectedType = userType.options[userType.selectedIndex].value;
 
     userPrice.setAttribute('placeholder', Apartments[selectedType.toUpperCase()].price);
+    userPrice.setAttribute('min', Apartments[[selectedType.toUpperCase()]].price);
   };
 
   var validateCapacity = function () {
@@ -81,7 +82,8 @@
   window.form = {
     putCenterAddress: putCenterAddress,
     Apartments: Apartments,
-    putSelectedTypePlaceholder: putSelectedTypePlaceholder
+    putSelectedTypePrice: putSelectedTypePrice,
+    validatePrice: validatePrice
   };
 
 })();

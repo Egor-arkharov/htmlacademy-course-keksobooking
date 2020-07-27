@@ -90,10 +90,14 @@
     }
   };
 
+  var makeCardAddress = function (location) {
+    var address = (location.x + window.utile.pinHalfSize) + ', ' + (location.y + window.utile.pinSizeY + window.utile.pinPointSizeY);
+    renderCardValue('.popup__text--address', address);
+  };
+
   var markCardText = function (offer, author) {
     var offerType = offer.type.toUpperCase();
 
-    renderCardValue('.popup__text--address', offer.address);
     renderCardValue('.popup__title', offer.title);
     renderCardValue('.popup__text--price', offer.price + '₽/ночь');
     renderCardValue('.popup__type', window.form.Apartments[offerType].name);
@@ -104,8 +108,9 @@
   };
 
   var renderCard = function (data) {
-    markCardFeatures(data.offer.features);
     markCardText(data.offer, data.author);
+    makeCardAddress(data.location);
+    markCardFeatures(data.offer.features);
     markCardPhotos(data.offer.photos);
 
     return apartmentCard;

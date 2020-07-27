@@ -28,7 +28,9 @@
     newAppartImg.alt = pin.offer.title;
 
     newPin.addEventListener('click', function () {
+      window.map.hideActivePin();
       window.map.openPopup(pin);
+      newPin.classList.add('map__pin--active');
     });
 
     return newPin;

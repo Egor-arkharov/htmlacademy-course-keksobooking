@@ -27,7 +27,7 @@
     form.classList.add('ad-form--disabled');
     form.reset();
     window.form.putCenterAddress();
-    window.form.putSelectedTypePlaceholder();
+    window.form.putSelectedTypePrice();
 
     window.main.disableFormFilter();
     window.pin.formFilter.reset();

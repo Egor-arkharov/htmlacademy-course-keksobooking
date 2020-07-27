@@ -6,8 +6,8 @@
   var WINDOW_SIZE_Y_TOP = 130;
   var WINDOW_SIZE_Y_BOTTOM = 630;
 
-  var pinPointLimitTop = WINDOW_SIZE_Y_TOP - window.utile.pinSizeY - window.utile.pinPointSizeY;
-  var pinPointLimitBottom = WINDOW_SIZE_Y_BOTTOM - window.utile.pinSizeY - window.utile.pinPointSizeY;
+  var pinPointLimitTop = WINDOW_SIZE_Y_TOP - window.utile.pinSizeY - window.utile.pinMainPointSizeY;
+  var pinPointLimitBottom = WINDOW_SIZE_Y_BOTTOM - window.utile.pinSizeY - window.utile.pinMainPointSizeY;
   var pinPointLimitLeft = WINDOW_SIZE_X_LEFT - window.utile.pinHalfSize;
   var pinPointLimitRight = WINDOW_SIZE_X_RIGHT - window.utile.pinHalfSize;
 
@@ -47,7 +47,7 @@
         mapPin.style.left = newOffsetX + 'px';
       }
 
-      address.value = (newOffsetX + window.utile.pinHalfSize) + ', ' + (newOffsetY + window.utile.pinSizeY + window.utile.pinPointSizeY);
+      address.value = (newOffsetX + window.utile.pinHalfSize) + ', ' + (newOffsetY + window.utile.pinSizeY + window.utile.pinMainPointSizeY);
     };
 
     var onMouseUp = function (upEvt) {
