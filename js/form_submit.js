@@ -36,7 +36,7 @@
     mapPinMain.addEventListener('keydown', window.map.onKeyCheckPage);
   };
 
-  var removePopup = function (evt) {
+  var removePopup = function () {
     var successPopup = document.querySelector('.success');
     var errorPopup = document.querySelector('.error');
 
