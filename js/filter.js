@@ -1,6 +1,7 @@
 'use strict';
 
 (function () {
+  var MAX_PINS = 5;
   var filterPrice = document.querySelector('#housing-price');
 
   var Price = {
@@ -9,41 +10,67 @@
   };
 
   var updateByType = function (data, value, type) {
-    var typeFilter = data.filter(function (pin) {
-      return pin.offer[type].toString() === value;
-    });
+    var typeFilterAds = [];
 
-    return typeFilter;
+    for (var i = 0; i < data.length; i++) {
+      if (typeFilterAds > MAX_PINS) {
+        break;
+      }
+
+      if (data[i].offer[type].toString() === value) {
+        typeFilterAds.push(data[i]);
+      }
+    }
+
+    return typeFilterAds;
+
+    // var typeFilter = data.filter(function (pin) {
+    //   return pin.offer[type].toString() === value;
+    // });
+
+    // return typeFilter;
   };
 
   var updateByPrice = function (data, type) {
-    var priceFilter = data.filter(function (pin) {
-      var price = pin.offer[type];
+    var priceFilterAds = [];
 
-      if (filterPrice.value === 'low') {
-        return price <= Price.MIN;
+    for (var i = 0; i < data.length; i++) {
+      var price = data[i].offer[type];
+
+      if (priceFilterAds > MAX_PINS) {
+        break;
       }
 
-      if (filterPrice.value === 'middle') {
-        return price >= Price.MIN && price <= Price.MAX;
+      if (filterPrice.value === 'low' && price <= Price.MIN) {
+        priceFilterAds.push(data[i]);
       }
 
-      if (filterPrice.value === 'high') {
-        return price >= Price.MAX;
+      if (filterPrice.value === 'middle' && price >= Price.MIN && price <= Price.MAX) {
+        priceFilterAds.push(data[i]);
       }
 
-      return pin;
-    });
+      if (filterPrice.value === 'high' && price >= Price.MAX) {
+        priceFilterAds.push(data[i]);
+      }
+    }
 
-    return priceFilter;
+    return priceFilterAds;
   };
 
   var updateByFeatures = function (data, value) {
-    var featureFilter = data.filter(function (pin) {
-      return pin.offer.features.includes(value);
-    });
+    var featureFilterAds = [];
 
-    return featureFilter;
+    for (var i = 0; i < data.length; i++) {
+      if (featureFilterAds > MAX_PINS) {
+        break;
+      }
+
+      if (data[i].offer.features.includes(value)) {
+        featureFilterAds.push(data[i]);
+      }
+    }
+
+    return featureFilterAds;
   };
 
   var updateOffers = function (data) {
@@ -56,11 +83,15 @@
 
     window.pin.removePopup();
 
-    options = Array.from(options).filter(function (option) {
-      return option.value !== 'any';
-    });
+    var newOptions = [];
 
-    options.forEach(function (option) {
+    for (var i = 0; i < options.length; i++) {
+      if (options[i].value !== 'any') {
+        newOptions.push(options[i]);
+      }
+    }
+
+    newOptions.forEach(function (option) {
       switch (option.id) {
         case 'housing-type':
           data = updateByType(data, option.value, 'type');

@@ -5,31 +5,28 @@
   var card = popupTemplate.querySelector('.popup');
   var apartmentCard = card.cloneNode(true);
 
+  var featureContainer = apartmentCard.querySelector('.popup__features');
+  var popupText = apartmentCard.querySelector('.popup__text--time');
+
   var photosContainer = apartmentCard.querySelector('.popup__photos');
   var photo = photosContainer.querySelector('.popup__photo');
-  var featureContainer = apartmentCard.querySelector('.popup__features');
+  var popupDescription = apartmentCard.querySelector('.popup__description');
 
   var renderCardValue = function (popupValue, cardValue) {
     apartmentCard.querySelector(popupValue).textContent = cardValue;
   };
 
-  var clearOldElements = function (elementClass) {
-    var oldElements = apartmentCard.querySelectorAll(elementClass);
+  var clearOldElements = function (container, elementClass) {
+    var oldElements = container.querySelectorAll(elementClass);
 
     for (var i = 0; i < oldElements.length; i++) {
       oldElements[i].remove();
     }
   };
 
-  var createFeaturesContainer = function () {
-    var popupText = apartmentCard.querySelector('.popup__text--time');
-
-    var newFeatureContainer = document.createElement('ul');
-    newFeatureContainer.className = 'popup__features';
-
-    if (!featureContainer) {
-      popupText.insertAdjacentElement('afterend', newFeatureContainer);
-    }
+  var createNewContainer = function (tagName, className) {
+    var newContainer = document.createElement(tagName);
+    newContainer.className = className;
   };
 
   var createNewFeatures = function (offerFeatures) {
@@ -48,45 +45,34 @@
     if (offerFeatures.length === 0 && featureContainer) {
       featureContainer.remove();
     } else {
-      createFeaturesContainer();
-      clearOldElements('.popup__feature');
+      createNewContainer('ul', 'popup__features');
+
+      clearOldElements(featureContainer, '.popup__feature');
       featureContainer.innerHTML = '';
       featureContainer.appendChild(createNewFeatures(offerFeatures));
-    }
 
-  };
-
-  var createPhotosContainer = function () {
-    var photoContainer = apartmentCard.querySelector('.popup__photos');
-    var popupDescription = apartmentCard.querySelector('.popup__description');
-
-    var newPhotosContainer = document.createElement('div');
-    newPhotosContainer.className = 'popup__photos';
-
-    if (!photoContainer) {
-      popupDescription.insertAdjacentElement('afterend', newPhotosContainer);
+      popupText.insertAdjacentElement('afterend', featureContainer);
     }
   };
 
   var createNewPhotos = function (userPhotos) {
-    var newPhotosContainer = apartmentCard.querySelector('.popup__photos');
-
     for (var i = 0; i < userPhotos.length; i++) {
       photo.src = userPhotos[i];
       var cloneImage = photo.cloneNode(true);
-      newPhotosContainer.appendChild(cloneImage);
+      photosContainer.appendChild(cloneImage);
     }
   };
 
   var markCardPhotos = function (userPhotos) {
-    var lastPhotosContainer = apartmentCard.querySelector('.popup__photos');
-
-    if (userPhotos.length === 0 && lastPhotosContainer) {
-      lastPhotosContainer.remove();
+    if (userPhotos.length === 0 && photosContainer) {
+      photosContainer.remove();
     } else {
-      createPhotosContainer();
-      clearOldElements('.popup__photo');
+      createNewContainer('div', 'popup__photos');
+
+      clearOldElements(photosContainer, '.popup__photo');
       createNewPhotos(userPhotos);
+
+      popupDescription.insertAdjacentElement('afterend', photosContainer);
     }
   };
 
@@ -108,9 +94,10 @@
   };
 
   var renderCard = function (data) {
+    markCardFeatures(data.offer.features);
     markCardText(data.offer, data.author);
     makeCardAddress(data.location);
-    markCardFeatures(data.offer.features);
+
     markCardPhotos(data.offer.photos);
 
     return apartmentCard;
