@@ -36,7 +36,7 @@
     mapPinMain.addEventListener('keydown', window.map.onKeyCheckPage);
   };
 
-  var removePopup = function () {
+  var removePopup = function (evt) {
     var successPopup = document.querySelector('.success');
     var errorPopup = document.querySelector('.error');
 
@@ -47,13 +47,15 @@
     if (errorPopup) {
       errorPopup.remove();
     }
+
+    document.removeEventListener('keydown', onKeyHidePopup);
+    document.removeEventListener('mousedown', onMouseHidePopup);
   };
 
   var onKeyHidePopup = function (evt) {
     if (evt.key === EvtKeys.ESCAPE) {
       evt.preventDefault();
       removePopup();
-      document.removeEventListener('keydown', onKeyHidePopup);
     }
   };
 
@@ -61,7 +63,6 @@
     if (evt.button === MAIN_BUTTON) {
       evt.preventDefault();
       removePopup();
-      document.removeEventListener('mousedown', onMouseHidePopup);
     }
   };
 
