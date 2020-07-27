@@ -9,6 +9,8 @@
   var mapPinMain = document.querySelector('.map__pin--main');
   var resetButton = form.querySelector('.ad-form__reset');
 
+  var main = document.querySelector('main');
+
   var EvtKeys = {
     ENTER: 'Enter',
     ESCAPE: 'Escape'
@@ -25,73 +27,80 @@
     form.classList.add('ad-form--disabled');
     form.reset();
     window.form.putCenterAddress();
+    window.form.putSelectedTypePrice();
+
     window.main.disableFormFilter();
     window.pin.formFilter.reset();
 
-    mapPinMain.addEventListener('mousedown', window.map.checkActivePage);
-    mapPinMain.addEventListener('keydown', window.map.checkActivePage);
+    mapPinMain.addEventListener('mousedown', window.map.onMouseCheckPage);
+    mapPinMain.addEventListener('keydown', window.map.onKeyCheckPage);
   };
 
-  var onPopupHide = function (evt) {
+  var removePopup = function () {
     var successPopup = document.querySelector('.success');
     var errorPopup = document.querySelector('.error');
 
-    if (evt.key === EvtKeys.ESCAPE || evt.button === MAIN_BUTTON) {
+    if (successPopup) {
+      successPopup.remove();
+    }
+
+    if (errorPopup) {
+      errorPopup.remove();
+    }
+
+    document.removeEventListener('keydown', onKeyHidePopup);
+    document.removeEventListener('mousedown', onMouseHidePopup);
+  };
+
+  var onKeyHidePopup = function (evt) {
+    if (evt.key === EvtKeys.ESCAPE) {
       evt.preventDefault();
+      removePopup();
+    }
+  };
 
-      if (successPopup) {
-        successPopup.remove();
-      }
-
-      if (errorPopup) {
-        errorPopup.remove();
-      }
-
-      document.removeEventListener('keydown', onPopupHide);
-      document.removeEventListener('mousedown', onPopupHide);
+  var onMouseHidePopup = function (evt) {
+    if (evt.button === MAIN_BUTTON) {
+      evt.preventDefault();
+      removePopup();
     }
   };
 
   var showPopup = function (template) {
     var popupTemplate = document.querySelector(template).content.cloneNode(true);
-
-    document.body.appendChild(popupTemplate);
+    main.appendChild(popupTemplate);
   };
 
   var hideSuccessPopup = function () {
-    document.addEventListener('keydown', onPopupHide);
-    document.addEventListener('mousedown', onPopupHide);
+    document.addEventListener('keydown', onKeyHidePopup);
+    document.addEventListener('mousedown', onMouseHidePopup);
   };
 
   var hideErrorPopup = function () {
-    document.addEventListener('keydown', onPopupHide);
-    document.addEventListener('mousedown', onPopupHide);
+    document.addEventListener('keydown', onKeyHidePopup);
+    document.addEventListener('mousedown', onMouseHidePopup);
 
     var errorButton = document.querySelector('.error__button');
 
-    errorButton.addEventListener('click', onPopupHide);
+    errorButton.addEventListener('click', onMouseHidePopup);
   };
 
-  var successHandler = function () {
+  var onSuccess = function () {
     disablePage();
     showPopup('#success', '.success');
     hideSuccessPopup();
   };
 
-  var errorHandler = function () {
+  var onError = function () {
     showPopup('#error', '.error');
     hideErrorPopup();
   };
 
-  var submitHandler = function (evt) {
-    window.backendSave(new FormData(form), successHandler, errorHandler);
+  var onSubmitSaveData = function (evt) {
+    window.backendSave(new FormData(form), onSuccess, onError);
     evt.preventDefault();
   };
 
-  form.addEventListener('submit', submitHandler);
+  form.addEventListener('submit', onSubmitSaveData);
   resetButton.addEventListener('click', disablePage);
-
-  window.formSubmit = {
-    onPopupHide: onPopupHide
-  };
 })();

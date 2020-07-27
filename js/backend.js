@@ -2,7 +2,7 @@
 
 (function () {
 
-  var URL = {
+  var Url = {
     LOAD: 'https://javascript.pages.academy/keksobooking/data',
     SAVE: 'https://javascript.pages.academy/keksobooking'
   };
@@ -18,17 +18,19 @@
 
     xhr.addEventListener('load', function () {
       if (xhr.status === StatusCode.OK) {
-        onLoad(xhr.response);
-      } else {
-        onError('Статус ответа: ' + xhr.status + ' ' + xhr.statusText);
+        var loadResponse = onLoad(xhr.response);
+        return loadResponse;
       }
+
+      var errorResponse = onError('Статус ответа: ' + xhr.status + ' ' + xhr.statusText);
+      return errorResponse;
     });
 
     xhr.addEventListener('error', function () {
       onError('Произошла ошибка соединения');
     });
 
-    xhr.open('GET', URL.LOAD);
+    xhr.open('GET', Url.LOAD);
     xhr.send();
 
     return xhr.response;
@@ -50,7 +52,7 @@
       onError('Произошла ошибка соединения');
     });
 
-    xhr.open('POST', URL.SAVE);
+    xhr.open('POST', Url.SAVE);
     xhr.send(data);
   };
 

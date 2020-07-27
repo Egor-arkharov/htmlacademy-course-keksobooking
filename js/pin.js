@@ -3,6 +3,7 @@
 (function () {
   var MAX_PINS = 5;
 
+  var main = document.querySelector('main');
   var mapPin = document.querySelector('.map__pin');
   var mapPins = document.querySelector('.map__pins');
   var pinTemplate = document.querySelector('#pin').content;
@@ -11,10 +12,6 @@
   var offsetY = mapPin.getBoundingClientRect().height;
 
   var formFilter = document.querySelector('.map__filters');
-  var filterContainter = document.querySelector('.map__filters-container');
-  var housingFilter = filterContainter.querySelector('#housing-type');
-
-  var main = document.querySelector('main');
 
   var activePins = [];
 
@@ -31,7 +28,9 @@
     newAppartImg.alt = pin.offer.title;
 
     newPin.addEventListener('click', function () {
+      window.map.hideActivePin();
       window.map.openPopup(pin);
+      newPin.classList.add('map__pin--active');
     });
 
     return newPin;
@@ -49,7 +48,7 @@
     mapPins.appendChild(fragment);
   };
 
-  var updatePins = function () {
+  var onFilterUpdate = function () {
     if (activePins.length !== 0) {
       removeErrorMessage();
     }
@@ -57,15 +56,7 @@
     removePopup();
     removeLastPins();
 
-    var houseFilter = Object.values(activePins).filter(function (pin) {
-      if (housingFilter.value === 'any' && pin.offer) {
-        return pin;
-      }
-
-      return pin.offer.type === housingFilter.value;
-    });
-
-    window.debounce(renderPins(houseFilter));
+    window.debounce(renderPins(window.filter(activePins)));
   };
 
   var removePopup = function () {
@@ -103,14 +94,13 @@
   };
 
   var successHandler = function (pins) {
+    removeErrorMessage();
     activePins = pins;
     activateFormFilter();
-    updatePins();
+    renderPins(pins);
   };
 
-  var errorHandler = function (errorMessage) {
-    removeErrorMessage();
-
+  var makeErrorMessage = function (errorMessage) {
     var node = document.createElement('div');
     node.style = 'z-index: 100; margin: 0 auto; text-align: center; background-color: red;';
     node.style.position = 'absolute';
@@ -118,22 +108,26 @@
     node.style.right = 0;
     node.style.fontSize = '30px';
     node.classList.add('error__message');
-
     node.textContent = errorMessage;
-    main.insertAdjacentElement('afterbegin', node);
+
+    return node;
   };
 
-  housingFilter.addEventListener('change', updatePins);
+  var errorHandler = function (errorMessage) {
+    removeErrorMessage();
+    var message = makeErrorMessage(errorMessage);
+    main.insertAdjacentElement('afterbegin', message);
+  };
+
+  formFilter.addEventListener('change', onFilterUpdate);
 
   window.pin = {
     successHandler: successHandler,
     errorHandler: errorHandler,
+    removeErrorMessage: removeErrorMessage,
     removePopup: removePopup,
     removeLastPins: removeLastPins,
-    formFilter: formFilter,
-    updatePins: updatePins,
-    renderPins: renderPins,
-    activePins: activePins
+    formFilter: formFilter
   };
 
 })();

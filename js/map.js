@@ -28,27 +28,45 @@
       fieldset.disabled = false;
     });
 
-    address.value = (mapPin.offsetLeft + window.utile.pinSizeY + window.utile.pinPointSizeY) + ', ' + (mapPin.offsetTop + window.utile.pinHalfSize);
+    address.value = (mapPin.offsetLeft + window.utile.pinSizeY + window.utile.pinMainPointSizeY) + ', ' + (mapPin.offsetTop + window.utile.pinHalfSize);
 
     window.backendLoad(window.pin.successHandler, window.pin.errorHandler);
   };
 
-  var checkActivePage = function (evt) {
-    if (evt.button === MAIN_BUTTON || evt.key === window.map.EvtKeys.ENTER) {
+  var onMouseCheckPage = function (evt) {
+    if (evt.button === MAIN_BUTTON && mapPins.children.length <= 2) {
       activatePage();
     }
 
     if (mapPins.children.length > 2 && !errorMessage) {
-      mapPinMain.removeEventListener('mousedown', checkActivePage);
-      mapPinMain.removeEventListener('keydown', checkActivePage);
+      mapPinMain.removeEventListener('mousedown', onMouseCheckPage);
     }
   };
 
-  mapPinMain.addEventListener('mousedown', checkActivePage);
-  mapPinMain.addEventListener('keydown', checkActivePage);
+  var onKeyCheckPage = function (evt) {
+    if (evt.key === EvtKeys.ENTER && mapPins.children.length <= 2) {
+      activatePage();
+    }
+
+    if (mapPins.children.length > 2 && !errorMessage) {
+      mapPinMain.removeEventListener('keydown', onKeyCheckPage);
+    }
+  };
+
+  mapPinMain.addEventListener('mousedown', onMouseCheckPage);
+  mapPinMain.addEventListener('keydown', onKeyCheckPage);
+
+  var hideActivePin = function () {
+    var mapPinsActive = mapPins.querySelectorAll('.map__pin--active');
+
+    for (var i = 0; i < mapPinsActive.length; i++) {
+      mapPinsActive[i].classList.remove('map__pin--active');
+    }
+  };
 
   var onPopupEscPress = function (evt) {
     if (evt.key === EvtKeys.ESCAPE) {
+      hideActivePin();
       evt.preventDefault();
       closePopup();
     }
@@ -65,17 +83,19 @@
   };
 
   mapPin.addEventListener('keydown', function (evt) {
-    if (evt.key === EvtKeys.ENTER) {
+    if (evt.key === EvtKeys.ENTER && !mapPin.classList.contains('map__pin--main')) {
       openPopup();
     }
   });
 
   buttonClose.addEventListener('click', function () {
+    hideActivePin();
     closePopup();
   });
 
   buttonClose.addEventListener('keydown', function (evt) {
     if (evt.key === EvtKeys.ENTER) {
+      hideActivePin();
       closePopup();
     }
   });
@@ -83,7 +103,9 @@
   window.map = {
     openPopup: openPopup,
     EvtKeys: EvtKeys,
-    checkActivePage: checkActivePage
+    onMouseCheckPage: onMouseCheckPage,
+    onKeyCheckPage: onKeyCheckPage,
+    hideActivePin: hideActivePin
   };
 
 })();
