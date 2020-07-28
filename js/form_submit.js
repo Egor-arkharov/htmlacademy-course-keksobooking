@@ -97,7 +97,7 @@
   };
 
   var onSubmitSaveData = function (evt) {
-    window.backend(onSuccess, onError, new FormData(form));
+    window.backend.saveData(onSuccess, onError, new FormData(form));
     evt.preventDefault();
   };
 

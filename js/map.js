@@ -30,7 +30,7 @@
 
     address.value = (mapPin.offsetLeft + window.utile.pinSizeY + window.utile.pinMainPointSizeY) + ', ' + (mapPin.offsetTop + window.utile.pinHalfSize);
 
-    window.backend(window.pin.onPinSuccess, window.pin.onPinError);
+    window.backend.loadData(window.pin.onPinSuccess, window.pin.onPinError);
   };
 
   var onMouseCheckPage = function (evt) {

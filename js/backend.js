@@ -11,8 +11,7 @@
     OK: 200
   };
 
-  window.backend = function (onLoad, onError, data) {
-    var xhr = new XMLHttpRequest();
+  var handleRequest = function (xhr, onLoad, onError) {
     xhr.responseType = 'json';
 
     xhr.addEventListener('load', function () {
@@ -28,13 +27,28 @@
     xhr.addEventListener('error', function () {
       onError('Произошла ошибка соединения');
     });
+  };
 
-    if (data) {
-      xhr.open('POST', Url.SAVE);
-      xhr.send(data);
-    } else {
-      xhr.open('GET', Url.LOAD);
-      xhr.send();
-    }
+  var loadData = function (onLoad, onError) {
+    var xhr = new XMLHttpRequest();
+    handleRequest(xhr, onLoad, onError);
+    xhr.open('GET', Url.LOAD);
+    xhr.send();
+
+    return xhr.response;
+  };
+
+  var saveData = function (onLoad, onError, data) {
+    var xhr = new XMLHttpRequest();
+    handleRequest(xhr, onLoad, onError);
+    xhr.open('POST', Url.SAVE);
+    xhr.send(data);
+
+    return xhr.response;
+  };
+
+  window.backend = {
+    loadData: loadData,
+    saveData: saveData
   };
 })();
