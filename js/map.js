@@ -30,7 +30,7 @@
 
     address.value = (mapPin.offsetLeft + window.utile.pinSizeY + window.utile.pinMainPointSizeY) + ', ' + (mapPin.offsetTop + window.utile.pinHalfSize);
 
-    window.backendLoad(window.pin.successHandler, window.pin.errorHandler);
+    window.backend(window.pin.onPinSuccess, window.pin.onPinError);
   };
 
   var onMouseCheckPage = function (evt) {
@@ -59,9 +59,9 @@
   var hideActivePin = function () {
     var mapPinsActive = mapPins.querySelectorAll('.map__pin--active');
 
-    for (var i = 0; i < mapPinsActive.length; i++) {
-      mapPinsActive[i].classList.remove('map__pin--active');
-    }
+    mapPinsActive.forEach(function (element) {
+      element.classList.remove('map__pin--active');
+    });
   };
 
   var onPopupEscPress = function (evt) {
@@ -69,6 +69,7 @@
       hideActivePin();
       evt.preventDefault();
       closePopup();
+      document.removeEventListener('keydown', onPopupEscPress);
     }
   };
 

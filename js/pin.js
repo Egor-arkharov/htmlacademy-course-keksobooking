@@ -56,7 +56,7 @@
     removePopup();
     removeLastPins();
 
-    window.debounce(renderPins(window.filter(activePins)));
+    renderPins(window.filter(activePins));
   };
 
   var removePopup = function () {
@@ -70,11 +70,11 @@
   var removeLastPins = function () {
     var lastPins = mapPins.querySelectorAll('.map__pin');
 
-    for (var i = 0; i < lastPins.length; i++) {
-      if (!lastPins[i].classList.contains('map__pin--main')) {
-        lastPins[i].remove();
+    lastPins.forEach(function (element) {
+      if (!element.classList.contains('map__pin--main')) {
+        element.remove();
       }
-    }
+    });
   };
 
   var removeErrorMessage = function () {
@@ -86,14 +86,14 @@
   };
 
   var activateFormFilter = function () {
-    var formFilters = formFilter.children;
+    var formFilters = Array.from(formFilter.children);
 
-    for (var i = 0; i < formFilters.length; i++) {
-      formFilters[i].removeAttribute('disabled', 'disabled');
-    }
+    formFilters.forEach(function (element) {
+      element.removeAttribute('disabled', 'disabled');
+    });
   };
 
-  var successHandler = function (pins) {
+  var onPinSuccess = function (pins) {
     removeErrorMessage();
     activePins = pins;
     activateFormFilter();
@@ -113,17 +113,17 @@
     return node;
   };
 
-  var errorHandler = function (errorMessage) {
+  var onPinError = function (errorMessage) {
     removeErrorMessage();
     var message = makeErrorMessage(errorMessage);
     main.insertAdjacentElement('afterbegin', message);
   };
 
-  formFilter.addEventListener('change', onFilterUpdate);
+  formFilter.addEventListener('change', window.debounce(onFilterUpdate));
 
   window.pin = {
-    successHandler: successHandler,
-    errorHandler: errorHandler,
+    onPinSuccess: onPinSuccess,
+    onPinError: onPinError,
     removeErrorMessage: removeErrorMessage,
     removePopup: removePopup,
     removeLastPins: removeLastPins,

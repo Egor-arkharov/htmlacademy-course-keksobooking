@@ -64,11 +64,11 @@
     userPrice.setAttribute('placeholder', Apartments[value].price);
   };
 
-  var validateTimeOut = function () {
+  var onTimeOutValidate = function () {
     timeOut.value = timeIn.value;
   };
 
-  var validateTimeIn = function () {
+  var onTimeInValidate = function () {
     timeIn.value = timeOut.value;
   };
 
@@ -76,8 +76,8 @@
   rooms.addEventListener('change', validateCapacity);
   capacity.addEventListener('change', validateCapacity);
   userType.addEventListener('change', validatePrice);
-  timeIn.addEventListener('change', validateTimeOut);
-  timeOut.addEventListener('change', validateTimeIn);
+  timeIn.addEventListener('change', onTimeOutValidate);
+  timeOut.addEventListener('change', onTimeInValidate);
 
   window.form = {
     putCenterAddress: putCenterAddress,

@@ -79,11 +79,11 @@
 
     var newOptions = [];
 
-    for (var i = 0; i < options.length; i++) {
-      if (options[i].value !== 'any') {
-        newOptions.push(options[i]);
+    options.forEach(function (element) {
+      if (element.value !== 'any') {
+        newOptions.push(element);
       }
-    }
+    });
 
     newOptions.forEach(function (option) {
       switch (option.id) {

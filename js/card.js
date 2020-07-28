@@ -19,9 +19,9 @@
   var clearOldElements = function (container, elementClass) {
     var oldElements = container.querySelectorAll(elementClass);
 
-    for (var i = 0; i < oldElements.length; i++) {
-      oldElements[i].remove();
-    }
+    oldElements.forEach(function (element) {
+      element.remove();
+    });
   };
 
   var createNewContainer = function (tagName, className) {
@@ -56,11 +56,11 @@
   };
 
   var createNewPhotos = function (userPhotos) {
-    for (var i = 0; i < userPhotos.length; i++) {
-      photo.src = userPhotos[i];
+    userPhotos.forEach(function (element) {
+      photo.src = element;
       var cloneImage = photo.cloneNode(true);
       photosContainer.appendChild(cloneImage);
-    }
+    });
   };
 
   var markCardPhotos = function (userPhotos) {

@@ -60,7 +60,7 @@
   };
 
   var onMouseHidePopup = function (evt) {
-    if (evt.button === MAIN_BUTTON) {
+    if (evt.button === MAIN_BUTTON && evt.target.className !== 'success__message' && evt.target.className !== 'error__message') {
       evt.preventDefault();
       removePopup();
     }
@@ -97,7 +97,7 @@
   };
 
   var onSubmitSaveData = function (evt) {
-    window.backendSave(new FormData(form), onSuccess, onError);
+    window.backend(onSuccess, onError, new FormData(form));
     evt.preventDefault();
   };
 
